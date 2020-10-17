@@ -1,84 +1,74 @@
-const { response } = require('express');
 const axios = require('axios');
-function getPharmacyById(id) {
-    var url = 'https://localesfasa.farmaciasahumada.cl/Locales.asmx/LocalDescripcion?codLocal=' + id;
-    var headers = {
-        "Content-Type": "application/json"
-    }
-    fetch(url, { method: 'GET', headers: headers })
-        .then((res) => {
-            return res.json()
-        })
-    /*.then((json) => {
-        console.log(json);
-        return res.json(json);
-    });*/
 
-}
-
-async function getPharmacyList() {
-
-    let res = await axios.get('https://localesfasa.farmaciasahumada.cl/Locales.asmx/InterfazLocal');  
-    let data = res.data;
-    return data;
-  }
-
-function sugerencias(){
+function sendRut(rut, accion) {
     return {
-        "message": "Seleccione o escriba una comuna para buscar su farmacia:",
-        "platform": "kommunicate",
-        "metadata": {
-            "contentType": "300",
-            "templateId": "6",
-            "payload": [{
-                "title": "Santiago",
-                "message": "Santiago"
-            }, {
-                "title": "La Florida",
-                "message": "La Florida"
+        "responseId": "beb71ea7-5cf5-4d31-b70a-879987482809-fddac391",
+        "queryResult": {
+            "queryText": "",
+            "action": accion,
+            "parameters": {
+                "rut": rut
             },
-            {
-                "title": "Providencia",
-                "message": "Providencia"
-            },
-            {
-                "title": "Los Condes",
-                "message": "Los Condes"
-            }, {
-                "title": "La Barnechea",
-                "message": "La Barnechea"
-            }, {
-                "title": "San Miguel",
-                "message": "San Miguel"
-            }, {
-                "title": "Puente Alto",
-                "message": "Puente Alto"
-            }]
+            "allRequiredParamsPresent": true,
+            "fulfillmentText": "Ups, por el momento me encuentro fuera de servicio.",
+            "fulfillmentMessages": [
+                {
+                    "text": {
+                        "text": [
+                            "Ups, por el momento me encuentro fuera de servicio."
+                        ]
+                    }
+                }
+            ]
         }
-    }
+
+    };
 }
 
-function respuestaBasica(textoEnviar) {
+
+
+async function consultaRut(data) {
+
+    try {
+        const response = await axios({
+            headers: { "Content-Type": "application/json" ,
+        "Authorization":"Basic Y2xhcmEuYWJhc3RpYmxlQGR3b3JrZXJzLnN0b3JlOi5tMnRyNGMxcDN0MWw="},
+            method: "post",
+            url: "https://indominusrex.cl/api-abastible/public/api/petitions",
+            auth: {
+              username: "clara.abastible@dworkers.store",
+              password: ".m2tr4c1p3t1l"
+            },
+            data: {
+              data
+            }
+        });
+      
+        console.log(response)
+      
+        let data_ = response.data;
+        return data_;
+    }
+    catch (err) { console.log("Error: " + err); }
+}
+
+
+
+function respuestaBasica(textoEnviar, context, sessionId, lifespanCount = 2, proyectId = "cobra-lijklx") {
     let respuesta = {
-        "fulfillmentText": textoEnviar
+        "fulfillmentText": textoEnviar,
+        "outputContexts": [
+            {
+              "name":`projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
+              "lifespanCount": lifespanCount
+            }]
     }
     return respuesta;
 }
 
-function lugaresEncontrados (resultado) {
-    let lugares = "\n";
-    let contador = 1;
-    resultado.forEach(lugar => {
-        lugares += contador + ". Dirección: " + lugar.NombreLocal + " \nCiudad: " + lugar.Ciudad +  " \nHorario: " + lugar.Descripcion + ". \n";
-        contador++;
-    });
-    return lugares;
-}
 
 module.exports = {
-    getPharmacyById,
-    getPharmacyList,
+    consultaRut,
     respuestaBasica,
-    lugaresEncontrados,
-    sugerencias
+    sendRut
 }
