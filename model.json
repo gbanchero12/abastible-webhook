@@ -1,0 +1,24 @@
+[
+    {
+      "NroLocal": "B856",
+      "NombreLocal": "EL ROBLE 770",
+      "Region": "REGION VIII",
+      "Comuna": "CHILLAN",
+      "Ciudad": "CHILLAN",
+      "Latitud": "-36.609973",
+      "Longitud": "-72.101179",
+      "Descripcion": "Lunes a Viernes: 09:00 - 18:00, Sabado: 09:00 - 18:00",
+      "Local24H": "NO",
+      "Enfermeria": "NO",
+      "Ubicacion": "SI",
+      "Turno": "NO"
+    },
+    {
+        "NroLocal": "B272",
+        "Descripcion": "Lunes a Viernes: 00:01 - 00:00, Sabado: 00:01 - 00:00, Domingo: 00:01 - 00:00",
+        "Local24H": "SI",
+        "Enfermeria": "NO",
+        "Ubicacion": "Vehicular - Peatonal"
+      }
+]
+
