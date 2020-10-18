@@ -32,13 +32,9 @@ async function consultaRut(data) {
     try {
         const response = await axios({
             headers: { "Content-Type": "application/json" ,
-        "Authorization":"Basic Y2xhcmEuYWJhc3RpYmxlQGR3b3JrZXJzLnN0b3JlOi5tMnRyNGMxcDN0MWw="},
-            method: "post",
-            url: "https://indominusrex.cl/api-abastible/public/api/petitions",
-            auth: {
-              username: "clara.abastible@dworkers.store",
-              password: ".m2tr4c1p3t1l"
-            },
+        "Authorization":"Basic " + Buffer.from("clara.abastible@dworkers.store" + ":" + ".m2tr4c1p3t1l").toString('base64') },
+            method: "POST",
+            url: "https://indominusrex.cl/api-abastible/public/api/petitions",            
             data: {
               data
             }
