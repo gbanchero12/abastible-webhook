@@ -2,27 +2,16 @@ const axios = require('axios');
 
 function sendRut(rut, accion) {
     return {
-        "responseId": "beb71ea7-5cf5-4d31-b70a-879987482809-fddac391",
+        "responseId": "327578a2-5330-4294-b921-a67736e4a6d2-fddac391",
         "queryResult": {
-            "queryText": "",
-            "action": accion,
-            "parameters": {
-                "rut": rut
-            },
-            "allRequiredParamsPresent": true,
-            "fulfillmentText": "Ups, por el momento me encuentro fuera de servicio.",
-            "fulfillmentMessages": [
-                {
-                    "text": {
-                        "text": [
-                            "Ups, por el momento me encuentro fuera de servicio."
-                        ]
-                    }
-                }
-            ]
+          "queryText": "",
+          "action": accion,
+          "parameters": {
+            "desbloqueoSAP": "desbloqueo",
+            "rut": rut
+          }
         }
-
-    };
+      }
 }
 
 
@@ -35,12 +24,12 @@ async function consultaRut(data) {
         "Authorization":"Basic " + Buffer.from("clara.abastible@dworkers.store" + ":" + ".m2tr4c1p3t1l").toString('base64') },
             method: "POST",
             url: "https://indominusrex.cl/api-abastible/public/api/petitions",            
-            data: {
+            data: 
               data
-            }
+            
         });
       
-        console.log(response)
+        //console.log(response)
       
         let data_ = response.data;
         return data_;

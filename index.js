@@ -26,11 +26,16 @@ server.post("/", async (req, res) => {
     try {
         let action = req.body.queryResult.action;
         let parametros = req.body.queryResult.parameters;
-        //console.log(parametros);
+        
+        
         if (action === "Action.desbloqueo") {
             let rut = parametros.RUT;
-            if (rut === "11111111-1") {
-                respuesta = functions.respuestaBasica("Registrado correctamente", "PRUEBA", SESSION_ID, 2);
+            
+            let response = await functions.consultaRut(functions.sendRut(rut, action));  
+            
+            if (response.fulfillmentText !== undefined) {
+                console.log(response.fulfillmentText)
+                respuesta = functions.respuestaBasica(response.fulfillmentText, "PRUEBA", SESSION_ID, 2);
             } else {
                 respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 2);
             }
@@ -47,7 +52,6 @@ server.post("/", async (req, res) => {
         }
 
         if (action === "fallback-desbloqueo") {
-            console.log("INGRESO//////////////")
             respuesta = functions.respuestaBasica("Debe de ingresar un rut con el siguiente formato XXXXXXXX-X. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 1);
         }
 
