@@ -31,7 +31,7 @@ server.post("/", async (req, res) => {
         if (action === "Action.desbloqueo") {
             let rut = parametros.RUT;
             
-            let response = await functions.consultaRut(functions.sendRut(rut, action));  
+            let response = await functions.consultaRut(functions.sendRut(rut, "Action.desbloqueo", "rutSolicitante"));  
             
             if (response.fulfillmentText !== undefined) {
                 console.log(response.fulfillmentText)
