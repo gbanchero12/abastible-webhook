@@ -42,8 +42,12 @@ server.post("/", async (req, res) => {
         }
 
         if (action === "Remplazo-rut") {
+            
             let rut = parametros.RUT;
-            if (rut === "11111111-1") {
+
+            let response = await functions.consultaRut(functions.sendRut(rut, "Action.reemplazoTemporal", "rutSolicitante"));
+
+            if (response.fulfillmentText !== undefined) {
                 respuesta = functions.respuestaBasica("Ingrese el rut del reemplazado. (11111111-2)", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
             } else {
                 respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-followup", SESSION_ID, 1);
@@ -71,8 +75,10 @@ server.post("/", async (req, res) => {
 
         if (action === "Remplazo-rut.remplazo") {
             let rut = parametros.RUT;
+            let response = await functions.consultaRut(functions.sendRut(rut, "Action.reemplazoTemporal", "rutReemplazante"));
+
             
-            if (rut === "11111111-2") {
+            if (response.fulfillmentText !== undefined) {
                 respuesta = functions.respuestaBasica("Fecha de inicio del remplazo", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
             } else {
                 respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
@@ -84,12 +90,13 @@ server.post("/", async (req, res) => {
             let fechaFinal = parametros.dateFinal;
 
             if (fechaInicio < fechaFinal) {
-                respuesta = functions.respuestaBasica("Gracias José Miguel vamos a procesar tu solicitud", "END", SESSION_ID, 1);
+                let response = await functions.consultaRut(functions.sendDate("Action.reemplazoTemporal", fechaInicio, fechaFinal));
+                respuesta = functions.respuestaBasica(response.fulfillmentText, "END", SESSION_ID, 1);
             } else {
                 respuesta = functions.respuestaBasica("La fecha de inicio del remplazo debe de ser menor. Ingresa la fecha de inicio nuevamente:", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
             }
         }
-        //console.log(functions.consultaRut(functions.sendRut("11111111-1", "Action.desbloqueo")));
+        
     } catch (error) {
         console.log("Error:" + error);
     }

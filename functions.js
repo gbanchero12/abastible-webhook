@@ -1,59 +1,114 @@
 const axios = require('axios');
 
-function sendRut(rut, accion) {
-    return {
-        "responseId": "327578a2-5330-4294-b921-a67736e4a6d2-fddac391",
-        "queryResult": {
-          "queryText": "",
-          "action": accion,
-          "parameters": {
-            "desbloqueoSAP": "desbloqueo",
-            "rut": rut
+function sendRut(rut, accion, parametro = "rutSolicitante") {
+  return {
+    "responseId": "",
+    "queryResult": {
+      "queryText": "",
+      "action": accion,
+      "parameters": {
+        "desbloqueoSAP": "desbloqueo",
+        parametro: rut
+      },
+
+      "allRequiredParamsPresent": true,
+      "fulfillmentText": "El usuario con R.U.T  no se encuentra en sistema.",
+      "fulfillmentMessages": [
+        {
+          "text": {
+            "text": [
+              "El usuario con R.U.T  no se encuentra en sistema."
+            ]
           }
         }
+      ],
+      "outputContexts": [
+        {
+          "name": "projects/agenteabastible-gdxr/agent/sessions/e149b643-d4da-54b2-20b8-8bb92109c869/contexts/soportesap-followup",
+          "lifespanCount": 1,
+          "parameters": {
+            "tipoSoporte.original": "Soporte SAP",
+            "reemplazoTemporal.original": "Reemplazo temporal",
+            "rutSolicitante": "11111111-1",
+            "reemplazoTemporal": "Reemplazo temporal",
+            "tipoSoporte": "soporteSAP",
+            "rutSolicitante.original": "11111111-1"
+          }
+        }
+      ],
+      "intent": {
+        "name": "projects/agenteabastible-gdxr/agent/intents/8fc06b6d-c302-452e-9299-ce82efce104c",
+        "displayName": "soporteSAP - reemplazo temporal - solicitante"
+      },
+      "intentDetectionConfidence": 1,
+      "diagnosticInfo": {
+        "webhook_latency_ms": 575
+      },
+      "languageCode": "es"
+    },
+    "webhookStatus": {
+      "message": "Webhook execution successful"
+    }
+  };
+}
+
+function sendDate(accion, fechaDesde, fechaHasta) {
+  return {
+    "responseId": "",
+    "queryResult": {
+      "queryText": "",
+      "action": accion,
+      "parameters": {
+        "fechaDesde": fechaDesde,
+        "fechaHasta": fechaHasta
       }
+    }
+  }
 }
 
 
 
 async function consultaRut(data) {
 
-    try {
-        const response = await axios({
-            headers: { "Content-Type": "application/json" ,
-        "Authorization":"Basic " + Buffer.from("clara.abastible@dworkers.store" + ":" + ".m2tr4c1p3t1l").toString('base64') },
-            method: "POST",
-            url: "https://indominusrex.cl/api-abastible/public/api/petitions",            
-            data: 
-              data
-            
-        });
-      
-        //console.log(response)
-      
-        let data_ = response.data;
-        return data_;
-    }
-    catch (err) { console.log("Error: " + err); }
+  try {
+    const response = await axios({
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Basic " + Buffer.from("clara.abastible@dworkers.store" + ":" + ".m2tr4c1p3t1l").toString('base64')
+      },
+      method: "POST",
+      url: "https://indominusrex.cl/api-abastible/public/api/petitions",
+      data:
+        data
+
+    });
+
+    //console.log(response)
+
+    let data_ = response.data;
+    return data_;
+  }
+  catch (err) { console.log("Error: " + err); }
 }
 
 
 
 function respuestaBasica(textoEnviar, context, sessionId, lifespanCount = 2, proyectId = "cobra-lijklx") {
-    let respuesta = {
-        "fulfillmentText": textoEnviar,
-        "outputContexts": [
-            {
-              "name":`projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
-              "lifespanCount": lifespanCount
-            }]
-    }
-    return respuesta;
+  let respuesta = {
+    "fulfillmentText": textoEnviar,
+    "outputContexts": [
+      {
+        "name": `projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
+        "lifespanCount": lifespanCount
+      }]
+  }
+  return respuesta;
 }
 
 
 module.exports = {
-    consultaRut,
-    respuestaBasica,
-    sendRut
+  consultaRut,
+  respuestaBasica,
+  sendRut,
+  sendDate
 }
