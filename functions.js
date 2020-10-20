@@ -1,17 +1,31 @@
 const axios = require('axios');
 
-function sendRut(rut, accion) {
+function sendRut(rut, accion, parametro = "rut") {
     return {
-        "responseId": "327578a2-5330-4294-b921-a67736e4a6d2-fddac391",
+        "responseId": "",
         "queryResult": {
           "queryText": "",
           "action": accion,
           "parameters": {
             "desbloqueoSAP": "desbloqueo",
-            "rut": rut
+            parametro: rut
           }
         }
       }
+}
+
+function sendDate(accion, fechaDesde, fechaHasta){
+  return {
+      "responseId": "",
+      "queryResult": {
+        "queryText": "",
+        "action": accion,
+        "parameters": {
+          "fechaDesde": fechaDesde,
+          "fechaHasta": fechaHasta
+        }
+      }
+    }
 }
 
 
@@ -55,5 +69,6 @@ function respuestaBasica(textoEnviar, context, sessionId, lifespanCount = 2, pro
 module.exports = {
     consultaRut,
     respuestaBasica,
-    sendRut
+    sendRut,
+    sendDate
 }
