@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-function sendRut(rut, accion, parametro = "rut") {
+function sendRut(rut, accion, parametro = "rutSolicitante") {
   return {
     "responseId": "",
     "queryResult": {
