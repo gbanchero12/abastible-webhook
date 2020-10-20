@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-function sendRut(rut, accion, parametro = "rutSolicitante") {
+function send(rut, accion, parametro = "rutSolicitante",parametro2 = "desbloqueoSAP", valorParametro2 = "desbloqueo") {
   return {
     "responseId": "",
     "queryResult": {
@@ -61,10 +61,49 @@ function sendDate(accion, fechaDesde, fechaHasta) {
       "parameters": {
         "fechaDesde": fechaDesde,
         "fechaHasta": fechaHasta
-      }
+      },
+      "allRequiredParamsPresent": true,
+      "fulfillmentText": "El usuario con R.U.T  no se encuentra en sistema.",
+      "fulfillmentMessages": [
+        {
+          "text": {
+            "text": [
+              "El usuario con R.U.T  no se encuentra en sistema."
+            ]
+          }
+        }
+      ],
+      "outputContexts": [
+        {
+          "name": "projects/agenteabastible-gdxr/agent/sessions/e149b643-d4da-54b2-20b8-8bb92109c869/contexts/soportesap-followup",
+          "lifespanCount": 1,
+          "parameters": {
+            "tipoSoporte.original": "Soporte SAP",
+            "reemplazoTemporal.original": "Reemplazo temporal",
+            "rutSolicitante": "11111111-1",
+            "reemplazoTemporal": "Reemplazo temporal",
+            "tipoSoporte": "soporteSAP",
+            "rutSolicitante.original": "11111111-1"
+          }
+        }
+      ],
+      "intent": {
+        "name": "projects/agenteabastible-gdxr/agent/intents/8fc06b6d-c302-452e-9299-ce82efce104c",
+        "displayName": "soporteSAP - reemplazo temporal - solicitante"
+      },
+      "intentDetectionConfidence": 1,
+      "diagnosticInfo": {
+        "webhook_latency_ms": 575
+      },
+      "languageCode": "es"
+    },
+    "webhookStatus": {
+      "message": "Webhook execution successful"
     }
-  }
+  };
 }
+  
+
 
 
 
@@ -109,6 +148,6 @@ function respuestaBasica(textoEnviar, context, sessionId, lifespanCount = 2, pro
 module.exports = {
   consultaRut,
   respuestaBasica,
-  sendRut,
+  send,
   sendDate
 }
