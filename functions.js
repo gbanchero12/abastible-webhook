@@ -4,8 +4,8 @@ function sendRemplazo(rut, accion) {
   return {
     "responseId": "",
     "queryResult": {
-      "queryText": "",
-      "action": accion,
+      "queryText": rut,
+      "action": "Action.reemplazoTemporal",
       "parameters": {
         rutSolicitante: rut,
       },
