@@ -31,7 +31,7 @@ server.post("/", async (req, res) => {
         if (action === "Action.desbloqueo") {
             let rut = parametros.RUT;
             
-            let response = await functions.consultaRut(functions.send(rut, "Action.desbloqueo", "rutSolicitante"));  
+            let response = await functions.consultaRut(functions.sendDesbloqueo(rut, "Action.desbloqueo", "rut","desbloqueoSAP","desbloqueo"));  
             
             if (response.fulfillmentText !== undefined) {
                 console.log(response.fulfillmentText)
@@ -45,7 +45,7 @@ server.post("/", async (req, res) => {
             
             let rut = parametros.RUT;
 
-            let response = await functions.consultaRut(functions.send(rut, "Action.reemplazoTemporal", "rutSolicitante"));
+            let response = await functions.consultaRut(functions.sendRemplazo(rut, "Action.reemplazoTemporal", "rutSolicitante"));
 
             if (response.fulfillmentText !== undefined) {
                 respuesta = functions.respuestaBasica("Ingrese el rut del reemplazado. (11111111-2)", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
@@ -75,7 +75,7 @@ server.post("/", async (req, res) => {
 
         if (action === "Remplazo-rut.remplazo") {
             let rut = parametros.RUT;
-            let response = await functions.consultaRut(functions.send(rut, "Action.reemplazoTemporal", "rutReemplazante"));
+            let response = await functions.consultaRut(functions.sendRemplazo2(rut, "Action.reemplazoTemporal", "rutReemplazante"));
 
             
             if (response.fulfillmentText !== undefined) {
