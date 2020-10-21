@@ -74,8 +74,8 @@ server.post("/", async (req, res) => {
         }
 
         if (action === "Action.Reemplazo-fechas") {
-            let fechaInicio = parametros.dateInicio;
-            let fechaFinal = parametros.dateFinal;
+            let fechaInicio = parametros.fechaInicio;
+            let fechaFinal = parametros.fechaFinal;
 
             if (fechaInicio < fechaFinal) {
                 let response = await functions.consultaRut(functions.sendDate(fechaInicio, fechaFinal, SESSION_ID));
