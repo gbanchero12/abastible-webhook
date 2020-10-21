@@ -66,12 +66,12 @@ function sendRemplazo(rut, sessionId) {
 
 function sendRemplazo2(rut, sessionId) {
   const json = {
-    "responseId": "",
+    "responseId": "ab6208eb-9810-4263-a65f-f4276db02676-5d846bd5",
     "queryResult": {
       "queryText": rut,
       "action": "Action.Reemplazo-rutReemplazante",
       "parameters": {
-        "rutReemplazado": rut
+        "rutReemplazante": rut
       },
       "allRequiredParamsPresent": true,
       "fulfillmentText": "",
@@ -225,6 +225,7 @@ async function consultaRut(data) {
     //console.log(response)
 
     let data_ = response.data;
+    console.log("///////////respuesta Metro Capital: " + JSON.stringify(data_));
     return data_;
   }
   catch (err) { console.log("Error: " + err); }
