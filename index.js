@@ -46,7 +46,7 @@ server.post("/", async (req, res) => {
             }
         }
 
-        if (action === "Reemplazo-rutSolicitante") {
+        if (action === "Action.Reemplazo-rutSolicitante") {
             
             let rut = parametros.rutSolicitante;
 
@@ -61,7 +61,7 @@ server.post("/", async (req, res) => {
         }
 
 
-        if (action === "Reemplazo-rutReemplazante") {
+        if (action === "Action.Reemplazo-rutReemplazante") {
             let rut = parametros.rutReemplazado;
             let response = await functions.consultaRut(functions.sendRemplazo2(rut, SESSION_ID));
 
@@ -73,7 +73,7 @@ server.post("/", async (req, res) => {
             }
         }
 
-        if (action === "Reemplazo-fechas") {
+        if (action === "Action.Reemplazo-fechas") {
             let fechaInicio = parametros.dateInicio;
             let fechaFinal = parametros.dateFinal;
 

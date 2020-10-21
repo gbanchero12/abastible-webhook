@@ -5,7 +5,7 @@ function sendRemplazo(rut, sessionId) {
     "responseId": "ab6208eb-9810-4263-a65f-f4276db02676-5d846bd5",
     "queryResult": {
       "queryText": rut,
-      "action": "Reemplazo-rutSolicitante",
+      "action": "Action.Reemplazo-rutSolicitante",
       "parameters": {
         "rutSolicitante": rut
       },
@@ -69,7 +69,7 @@ function sendRemplazo2(rut, sessionId) {
     "responseId": "",
     "queryResult": {
       "queryText": rut,
-      "action": "Reemplazo-rutReemplazante",
+      "action": "Action.Reemplazo-rutReemplazante",
       "parameters": {
         "rutReemplazado": rut
       },
@@ -123,7 +123,7 @@ function sendDate(fechaDesde, fechaHasta, sessionId) {
     "responseId": "74243904-bdff-4c9a-bffc-093d04940807-fddac391",
     "queryResult": {
         "queryText": "11111111-1",
-        "action": "Reemplazo-fechas",
+        "action": "Action.Reemplazo-fechas",
         "parameters": {
             "fechaInicio": fechaDesde,
             "fechaFinal": fechaHasta
