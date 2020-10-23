@@ -16,9 +16,28 @@ server.get("/", (req, res) => {
     res.send("OK");
 });
 
+function simpleStringify (object){
+    var simpleObject = {};
+    for (var prop in object ){
+        if (!object.hasOwnProperty(prop)){
+            continue;
+        }
+        if (typeof(object[prop]) == 'object'){
+            continue;
+        }
+        if (typeof(object[prop]) == 'function'){
+            continue;
+        }
+        simpleObject[prop] = object[prop];
+    }
+    return JSON.stringify(simpleObject); // returns cleaned up JSON
+};
+
 server.post("/postData", async (req, res) => {
 
-    console.log("Data... ///////////////" + res.body);
+    console.log("Data1... ///////////////" + simpleStringify(req));
+    console.log("Data... ///////////////" + JSON.stringify(req.body));
+    res.send("200");
 });
 
 server.post("/", async (req, res) => {

@@ -263,13 +263,11 @@ function respuestaDatePiker(context,sessionId,lifespanCount = 2, proyectId = "co
                 {
                   "type": "date",
                   "data": {
-                    "name": "FechaInicio",
                     "label": "Fecha inicio"
                   }
                 },
                 {
                   "data": {
-                    "name": "FechaFinal",
                     "label": "Fecha Final"
                   },
                   "type": "date"
@@ -277,25 +275,22 @@ function respuestaDatePiker(context,sessionId,lifespanCount = 2, proyectId = "co
                 {
                   "type": "submit",
                   "data": {
-                    "name": "Submit",
-                    "type": "submit",
-                    "action": {
+                    "action":{
+                      "message": "optional- this message will be used as acknowledgement text when user clicks the button",
                       "requestType": "json",
                       "formAction": "https://abastible-chatbot.herokuapp.com/postData"
-                    }
+                    },
+                    "type": "submit",
+                    "name": "Submit"
                   }
                 }
-              ],
-              "templateId": "12",
-              "contentType": "300"
+              ]
             }
           }
         }
       ]
-    
+    };
   }
-}
-
 
 module.exports = {
   consultaRut,
