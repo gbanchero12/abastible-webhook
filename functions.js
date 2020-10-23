@@ -225,7 +225,7 @@ async function consultaRut(data) { //consulta hacia servicio de ustedes
     //console.log(response)
 
     let data_ = response.data;
-    console.log("///////////respuesta Metro Capital: " + JSON.stringify(data_));
+    //console.log("///////////respuesta Metro Capital: " + JSON.stringify(data_));
     return data_;
   }
   catch (err) { console.log("Error: " + err); }
@@ -266,6 +266,13 @@ function respuestaDatePiker(context,sessionId,lifespanCount = 2, proyectId = "co
                     "label": "Fecha Inicio",
                     "name":"fechaInicio"
                   }
+                }, 
+                {
+                  "type": "date",
+                  "data": {
+                    "label": "Fecha Final",
+                    "name":"fechaFinal"
+                  }
                 },                
                 {
                   "data": {
@@ -273,7 +280,7 @@ function respuestaDatePiker(context,sessionId,lifespanCount = 2, proyectId = "co
                       "type": "submit",
                       "label": "Submit",
                       "formAction": "https://abastible-chatbot.herokuapp.com/postData",
-                      "requestType": "json"
+                      "requestType": "postBackToBotPlatform"
                     },
                     "name": "Submit",
                     "type": "submit"

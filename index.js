@@ -35,13 +35,14 @@ function simpleStringify (object){
 
 server.post("/postData", async (req, res) => {
 
-    console.log("Data1... ///////////////" + simpleStringify(request.body.originalDetectIntentRequest));
-    console.log("Data... ///////////////" + JSON.stringify(req.body));
+    console.log("Data1... ///////////////" + simpleStringify(req.json));
+    //console.log("Data... ///////////////" + JSON.stringify(req.body.fechaInicio));
     res.send("200");
 });
 
 server.post("/", async (req, res) => {
 
+    console.log(req.body.originalDetectIntentRequest);
     //capturo datos de fullfilment
 
     let SESSION_ID;
@@ -122,6 +123,11 @@ server.post("/", async (req, res) => {
 
         if (action === "Fechas.fallback") {
             respuesta = functions.respuestaBasica("Debe de ingresar una fecha con el siguiente formato DD-MM-YYY. Intente nuevamente con otra fecha.", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
+        }
+
+        if(action === "postBackToBotPlatform"){
+            console.log("VOLVIOOOOOOOOOOOOOOOOOOOO")
+            console.log(req.body);
         }
         
     } catch (error) {
