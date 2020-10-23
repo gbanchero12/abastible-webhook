@@ -60,7 +60,7 @@ function sendRemplazo(rut, sessionId) {
   };
 
   let json_ = JSON.stringify(json);
-  console.log(json_);
+  //console.log(json_);
   return json_;
 }
 
@@ -253,8 +253,6 @@ function respuestaDatePiker(context,sessionId,lifespanCount = 2, proyectId = "co
         "name": `projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
         "lifespanCount": lifespanCount
       }],
-    
-    
       "fulfillmentMessages": [
         {
           "payload": {
@@ -283,7 +281,7 @@ function respuestaDatePiker(context,sessionId,lifespanCount = 2, proyectId = "co
                     "type": "submit",
                     "action": {
                       "requestType": "json",
-                      "formAction": "<URL>"
+                      "formAction": "https://abastible-chatbot.herokuapp.com/postData"
                     }
                   }
                 }

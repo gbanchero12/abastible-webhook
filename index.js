@@ -16,6 +16,11 @@ server.get("/", (req, res) => {
     res.send("OK");
 });
 
+server.post("/postData", async (req, res) => {
+
+    console.log("Data... ///////////////" + res.body);
+});
+
 server.post("/", async (req, res) => {
 
     //capturo datos de fullfilment
@@ -42,7 +47,7 @@ server.post("/", async (req, res) => {
             let response = await functions.consultaRut(functions.sendDesbloqueo(rut, SESSION_ID));  
             
             if (response.fulfillmentText !== undefined) { //se encontró RUT
-                console.log(response.fulfillmentText)
+                //console.log(response.fulfillmentText)
                 respuesta = functions.respuestaBasica(response.fulfillmentText, "PRUEBA", SESSION_ID, 2);
             } else {
                 // NO Se encontró RUT
@@ -79,18 +84,9 @@ server.post("/", async (req, res) => {
             }
         }
 
-        if (action === "Action.Reemplazo-fechas") {
-            console.log(JSON.stringify(req.body))
-            let fechaInicio = parametros.fechaInicio;
-            let fechaFinal = parametros.fechaFinal;
-
-            if (fechaInicio < fechaFinal) { //fechas correctas
-                let response = await functions.consultaRut(functions.sendDate(fechaInicio, fechaFinal, SESSION_ID));
-                respuesta = functions.respuestaBasica(response.fulfillmentText, "END", SESSION_ID, 1);
-            } else { //pedir fechas nuevamente
-                respuesta = functions.respuestaBasica("La fecha de inicio del remplazo debe de ser menor. Ingresa la fecha de inicio nuevamente:", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
+        if (action === "Action.Reemplazo-fechas") {    
+                respuesta = functions.respuestaBasica("Su solicitud fue realizada con éxito", "END", SESSION_ID, 1);
             }
-        }
 
         //fallbacks
         if (action === "fallback-desbloqueo") {
