@@ -6,44 +6,13 @@ const functions = require('./functions');
 const { consultaRut } = require('./functions');
 server.use(bodyParser.json());
 
-/*
-*Fallback desbloqueo
-*avisar que en caso de falla puede intentar de nuevo
-*resumen ver los outputs
-*/
 
 server.get("/", (req, res) => {
     res.send("OK");
 });
 
-function simpleStringify (object){
-    var simpleObject = {};
-    for (var prop in object ){
-        if (!object.hasOwnProperty(prop)){
-            continue;
-        }
-        if (typeof(object[prop]) == 'object'){
-            continue;
-        }
-        if (typeof(object[prop]) == 'function'){
-            continue;
-        }
-        simpleObject[prop] = object[prop];
-    }
-    return JSON.stringify(simpleObject); // returns cleaned up JSON
-};
-
-server.post("/postData", async (req, res) => {
-
-    console.log("Data1... ///////////////" + simpleStringify(req.json));
-    //console.log("Data... ///////////////" + JSON.stringify(req.body.fechaInicio));
-    res.send("200");
-});
-
 server.post("/", async (req, res) => {
 
-    console.log(req.body.originalDetectIntentRequest);
-    //capturo datos de fullfilment
 
     let SESSION_ID;
     let RESPONSE_ID;
@@ -66,11 +35,9 @@ server.post("/", async (req, res) => {
             
             let response = await functions.consultaRut(functions.sendDesbloqueo(rut, SESSION_ID));  
             
-            if (response.fulfillmentText !== undefined) { //se encontró RUT
-                //console.log(response.fulfillmentText)
+            if (response.fulfillmentText !== undefined) { 
                 respuesta = functions.respuestaBasica(response.fulfillmentText, "PRUEBA", SESSION_ID, 2);
             } else {
-                // NO Se encontró RUT
                 respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 2);
             }
         }
@@ -104,9 +71,19 @@ server.post("/", async (req, res) => {
             }
         }
 
-        if (action === "Action.Reemplazo-fechas") {    
-                respuesta = functions.respuestaBasica("Su solicitud fue realizada con éxito", "END", SESSION_ID, 1);
+        if (action === "Action.Reemplazo-fechas") {
+            let fechaInicio = req.body.originalDetectIntentRequest.payload.formData["Fecha Inicio"];
+            let fechaFinal = req.body.originalDetectIntentRequest.payload.formData["Fecha Final"];
+           
+            console.log(fechaInicio,fechaFinal)
+
+            if (fechaInicio < fechaFinal) {
+                let response = await functions.consultaRut(functions.sendDate(fechaInicio, fechaFinal, SESSION_ID));
+                respuesta = functions.respuestaBasica(response.fulfillmentText, "END", SESSION_ID, 1);
+            } else {
+                respuesta = functions.respuestaDatePiker("La fecha de inicio debe de ser menor. Ingrese nuevamente por favor.","DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
             }
+        }
 
         //fallbacks
         if (action === "fallback-desbloqueo") {
@@ -125,10 +102,7 @@ server.post("/", async (req, res) => {
             respuesta = functions.respuestaBasica("Debe de ingresar una fecha con el siguiente formato DD-MM-YYY. Intente nuevamente con otra fecha.", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
         }
 
-        if(action === "postBackToBotPlatform"){
-            console.log("VOLVIOOOOOOOOOOOOOOOOOOOO")
-            console.log(req.body);
-        }
+        
         
     } catch (error) {
         console.log("Error:" + error);

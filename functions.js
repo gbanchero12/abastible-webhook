@@ -245,7 +245,7 @@ function respuestaBasica(textoEnviar, context, sessionId, lifespanCount = 2, pro
   return respuesta;
 }
 
-function respuestaDatePiker(context,sessionId,lifespanCount = 2, proyectId = "cobra-lijklx"){
+function respuestaDatePiker(text = "Indique la fecha de inicio y fecha final de reemplazo",context,sessionId,lifespanCount = 2, proyectId = "cobra-lijklx"){
   return {
     
     "outputContexts": [
@@ -257,32 +257,34 @@ function respuestaDatePiker(context,sessionId,lifespanCount = 2, proyectId = "co
         {
           "payload": {
             "platform": "kommunicate",
-            "message": "Submit your details",
+            "message": text,
             "metadata": {
               "payload": [
                 {
                   "type": "date",
                   "data": {
                     "label": "Fecha Inicio",
-                    "name":"fechaInicio"
+                    "name":"fechaInicio",
+                    "validation": {"errorText": "Field is mandatory"}
                   }
                 }, 
                 {
                   "type": "date",
                   "data": {
                     "label": "Fecha Final",
-                    "name":"fechaFinal"
+                    "name":"fechaFinal",
+                    "validation": {"errorText": "Field is mandatory"}
                   }
                 },                
                 {
                   "data": {
                     "action": {
                       "type": "submit",
-                      "label": "Submit",
+                      "label": "Enviar",
                       "formAction": "https://abastible-chatbot.herokuapp.com/postData",
                       "requestType": "postBackToBotPlatform"
                     },
-                    "name": "Submit",
+                    "name": "Enviar",
                     "type": "submit"
                   },
                   "type": "submit"
