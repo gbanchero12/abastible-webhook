@@ -35,7 +35,7 @@ function simpleStringify (object){
 
 server.post("/postData", async (req, res) => {
 
-    console.log("Data1... ///////////////" + simpleStringify(req));
+    console.log("Data1... ///////////////" + simpleStringify(request.body.originalDetectIntentRequest));
     console.log("Data... ///////////////" + JSON.stringify(req.body));
     res.send("200");
 });

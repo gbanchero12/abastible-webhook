@@ -257,40 +257,40 @@ function respuestaDatePiker(context,sessionId,lifespanCount = 2, proyectId = "co
         {
           "payload": {
             "platform": "kommunicate",
-            "message": "Ingresa las fechas de reemplazo:",
+            "message": "Submit your details",
             "metadata": {
               "payload": [
                 {
                   "type": "date",
                   "data": {
-                    "label": "Fecha inicio"
+                    "label": "Fecha Inicio",
+                    "name":"fechaInicio"
                   }
-                },
+                },                
                 {
                   "data": {
-                    "label": "Fecha Final"
-                  },
-                  "type": "date"
-                },
-                {
-                  "type": "submit",
-                  "data": {
-                    "action":{
-                      "message": "optional- this message will be used as acknowledgement text when user clicks the button",
-                      "requestType": "json",
-                      "formAction": "https://abastible-chatbot.herokuapp.com/postData"
+                    "action": {
+                      "type": "submit",
+                      "label": "Submit",
+                      "formAction": "https://abastible-chatbot.herokuapp.com/postData",
+                      "requestType": "json"
                     },
-                    "type": "submit",
-                    "name": "Submit"
-                  }
+                    "name": "Submit",
+                    "type": "submit"
+                  },
+                  "type": "submit"
                 }
-              ]
+              ],
+              "contentType": "300",
+              "templateId": "12"
             }
           }
         }
-      ]
-    };
+      ],
+    
   }
+}
+
 
 module.exports = {
   consultaRut,
