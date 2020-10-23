@@ -63,7 +63,7 @@ server.post("/", async (req, res) => {
 
             
             if (response.fulfillmentText !== undefined) { // se econtro rus reemplazante
-                respuesta = functions.respuestaDatePiker("DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
+                respuesta = functions.respuestaDatePiker("Indique la fecha de inicio y fecha final de reemplazo","DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
                 //respuesta = functions.respuestaBasica("Fecha de inicio del remplazo", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
             } else {
                 //no se encontró
@@ -72,11 +72,10 @@ server.post("/", async (req, res) => {
         }
 
         if (action === "Action.Reemplazo-fechas") {
+            console.log("buscando session id" + JSON.stringify(req.body))
             let fechaInicio = req.body.originalDetectIntentRequest.payload.formData["Fecha Inicio"];
             let fechaFinal = req.body.originalDetectIntentRequest.payload.formData["Fecha Final"];
            
-            console.log(fechaInicio,fechaFinal)
-
             if (fechaInicio < fechaFinal) {
                 let response = await functions.consultaRut(functions.sendDate(fechaInicio, fechaFinal, SESSION_ID));
                 respuesta = functions.respuestaBasica(response.fulfillmentText, "END", SESSION_ID, 1);

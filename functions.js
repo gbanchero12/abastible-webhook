@@ -245,7 +245,7 @@ function respuestaBasica(textoEnviar, context, sessionId, lifespanCount = 2, pro
   return respuesta;
 }
 
-function respuestaDatePiker(text = "Indique la fecha de inicio y fecha final de reemplazo",context,sessionId,lifespanCount = 2, proyectId = "cobra-lijklx"){
+function respuestaDatePiker(text,context,sessionId,lifespanCount = 2, proyectId = "cobra-lijklx"){
   return {
     
     "outputContexts": [
