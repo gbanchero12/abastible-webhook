@@ -17,6 +17,9 @@ server.get("/", (req, res) => {
 });
 
 server.post("/", async (req, res) => {
+
+    //capturo datos de fullfilment
+
     let SESSION_ID;
     let RESPONSE_ID;
     let PROYECT_ID = "cobra-lijklx"; //process.env.PROYECT_ID
@@ -32,16 +35,17 @@ server.post("/", async (req, res) => {
         let action = req.body.queryResult.action;
         let parametros = req.body.queryResult.parameters;
         
-        
+        //desbloqueo
         if (action === "Action.desbloqueo") {
             let rut = parametros.rut;
             
             let response = await functions.consultaRut(functions.sendDesbloqueo(rut, SESSION_ID));  
             
-            if (response.fulfillmentText !== undefined) {
+            if (response.fulfillmentText !== undefined) { //se encontró RUT
                 console.log(response.fulfillmentText)
                 respuesta = functions.respuestaBasica(response.fulfillmentText, "PRUEBA", SESSION_ID, 2);
             } else {
+                // NO Se encontró RUT
                 respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 2);
             }
         }
@@ -52,9 +56,9 @@ server.post("/", async (req, res) => {
 
             let response = await functions.consultaRut(functions.sendRemplazo(rut, SESSION_ID));
 
-            if (response.fulfillmentText !== undefined) {
+            if (response.fulfillmentText !== undefined) { //Se encontró Rut
                 respuesta = functions.respuestaBasica("Ingrese el rut del reemplazado. (11111111-2)", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
-            } else {
+            } else {//No se encontró Rut
                 respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-followup", SESSION_ID, 1);
             }           
 
@@ -66,25 +70,29 @@ server.post("/", async (req, res) => {
             let response = await functions.consultaRut(functions.sendRemplazo2(rut, SESSION_ID));
 
             
-            if (response.fulfillmentText !== undefined) {
-                respuesta = functions.respuestaBasica("Fecha de inicio del remplazo", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
+            if (response.fulfillmentText !== undefined) { // se econtro rus reemplazante
+                respuesta = functions.respuestaDatePiker("DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
+                //respuesta = functions.respuestaBasica("Fecha de inicio del remplazo", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
             } else {
+                //no se encontró
                 respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
             }
         }
 
         if (action === "Action.Reemplazo-fechas") {
+            console.log(JSON.stringify(req.body))
             let fechaInicio = parametros.fechaInicio;
             let fechaFinal = parametros.fechaFinal;
 
-            if (fechaInicio < fechaFinal) {
+            if (fechaInicio < fechaFinal) { //fechas correctas
                 let response = await functions.consultaRut(functions.sendDate(fechaInicio, fechaFinal, SESSION_ID));
                 respuesta = functions.respuestaBasica(response.fulfillmentText, "END", SESSION_ID, 1);
-            } else {
+            } else { //pedir fechas nuevamente
                 respuesta = functions.respuestaBasica("La fecha de inicio del remplazo debe de ser menor. Ingresa la fecha de inicio nuevamente:", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
             }
         }
 
+        //fallbacks
         if (action === "fallback-desbloqueo") {
             respuesta = functions.respuestaBasica("Debe de ingresar un rut con el siguiente formato XXXXXXXX-X. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 1);
         }

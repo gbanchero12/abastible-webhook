@@ -207,13 +207,13 @@ function sendDesbloqueo(rut, sessionId) {
 
 
 
-async function consultaRut(data) {
+async function consultaRut(data) { //consulta hacia servicio de ustedes
 
   try {
     const response = await axios({
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Basic " + Buffer.from("clara.abastible@dworkers.store" + ":" + ".m2tr4c1p3t1l").toString('base64')
+        "Authorization": "Basic " + Buffer.from("clara.abastible@dworkers.store" + ":" + ".m2tr4c1p3t1l").toString('base64') //#pasar a var de config
       },
       method: "POST",
       url: "https://indominusrex.cl/api-abastible/public/api/petitions",
@@ -232,7 +232,7 @@ async function consultaRut(data) {
 }
 
 
-
+//Método para devolver contexto y respuesta a DF
 function respuestaBasica(textoEnviar, context, sessionId, lifespanCount = 2, proyectId = "cobra-lijklx") {
   let respuesta = {
     "fulfillmentText": textoEnviar,
@@ -245,6 +245,59 @@ function respuestaBasica(textoEnviar, context, sessionId, lifespanCount = 2, pro
   return respuesta;
 }
 
+function respuestaDatePiker(context,sessionId,lifespanCount = 2, proyectId = "cobra-lijklx"){
+  return {
+    
+    "outputContexts": [
+      {
+        "name": `projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
+        "lifespanCount": lifespanCount
+      }],
+    
+    
+      "fulfillmentMessages": [
+        {
+          "payload": {
+            "platform": "kommunicate",
+            "message": "Ingresa las fechas de reemplazo:",
+            "metadata": {
+              "payload": [
+                {
+                  "type": "date",
+                  "data": {
+                    "name": "FechaInicio",
+                    "label": "Fecha inicio"
+                  }
+                },
+                {
+                  "data": {
+                    "name": "FechaFinal",
+                    "label": "Fecha Final"
+                  },
+                  "type": "date"
+                },
+                {
+                  "type": "submit",
+                  "data": {
+                    "name": "Submit",
+                    "type": "submit",
+                    "action": {
+                      "requestType": "json",
+                      "formAction": "<URL>"
+                    }
+                  }
+                }
+              ],
+              "templateId": "12",
+              "contentType": "300"
+            }
+          }
+        }
+      ]
+    
+  }
+}
+
 
 module.exports = {
   consultaRut,
@@ -252,6 +305,7 @@ module.exports = {
   sendRemplazo,
   sendDate,
   sendRemplazo2,
-  sendDesbloqueo
+  sendDesbloqueo,
+  respuestaDatePiker
 }
 
