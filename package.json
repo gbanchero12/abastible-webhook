@@ -2,7 +2,8 @@
   "name": "farmacia-chatbot",
   "description": "Cloud Functions for Firebase",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon --watch src index.js"
   },
   "engines": {
     "node": "8"

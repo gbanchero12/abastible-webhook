@@ -1,50 +1,78 @@
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const express = require('express');
 const bodyParser = require('body-parser');
 const server = express();
 const functions = require('./functions');
-const { consultaRut } = require('./functions');
 server.use(bodyParser.json());
-
 
 server.get("/", (req, res) => {
     res.send("OK");
 });
 
 server.post("/", async (req, res) => {
-
-
-    let SESSION_ID;
-    let RESPONSE_ID;
-    let PROYECT_ID = "cobra-lijklx"; //process.env.PROYECT_ID
-    if (req.body !== undefined && Array.isArray(req.body.queryResult.outputContexts)) {
-        let firstContext = req.body.queryResult.outputContexts[0].name + "";
-        firstContext = firstContext.split("/");
-        SESSION_ID = firstContext[4];
-        RESPONSE_ID = req.body.responseId;
-    }
+    
+    const request = functions.mapDataFromRequest(req);
+    const SESSION_ID = request.SESSION_ID;
+    const RESPONSE_ID = request.RESPONSE_ID;
+    const PROYECT_ID = request.PROYECT_ID;
+    const ACTION = request.ACTION;
+    const PARAMETERS = request.PARAMS;
 
     let respuesta;
     try {
-        let action = req.body.queryResult.action;
-        let parametros = req.body.queryResult.parameters;
         
-        //desbloqueo
-        if (action === "Action.desbloqueo") {
-            let rut = parametros.rut;
+
+        /*Chatbot Abastible 1.1 - Modificar Cuenta, Nueva Cuenta, Asignación Transacción*/
+
+        if (ACTION === "Action.RutSolicitante") {
+            let rutSolicitante = PARAMETERS.rutSolicitante;
+            
+            //***Voy al servicio a consultar si existe el Rut y si tiene perfil Jefatura***
+            
+            if (rutSolicitante === "11111111-1") { 
+                respuesta = functions.basicResponse("Ingrese usuario de SAP a modificar:", "DefaultWelcomeIntent-soportesap-modificarcuenta-rutSolicitante-followup", SESSION_ID, 1,PROYECT_ID);
+            }else {
+                //Si el Rut no existe devuelvo esto:
+                respuesta = functions.basicResponse("Rut no existe. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-modificarcuenta-followup", SESSION_ID, 1);
+                //Si el perfil no está habilitado devuelvo esto:
+                if(rutSolicitante === "11111111-2") //este IF no va, es solo para simular perfil no habilitado
+                respuesta = functions.basicResponse("Su perfil no tiene autorización para modificar una cuenta. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-modificarcuenta-followup", SESSION_ID, 1);
+            }
+        }
+
+        if(ACTION === "Action.UserSapAModificar"){
+            let usuarioAmodificar = PARAMETERS.usuarioAmodificar;
+            
+            //***Voy al servicio a consultar si existe el Rut y si tiene perfil Jefatura***
+
+            if(usuarioAmodificar === "gbanchero"){
+                //Si existe el usuario
+                respuesta = functions.basicResponse("Perfecto! Ingrese RUT de usuario a modificar:", "DefaultWelcomeIntent-soportesap-modificarcuenta-rutSolicitante-followup", SESSION_ID, 1,PROYECT_ID);
+            }else{
+                //Si no existe el usuario
+                respuesta = functions.basicResponse("El usuario no fue encontrado. Ingrese usuario a modificar nuevamente:", "DefaultWelcomeIntent-soportesap-modificarcuenta-rutSolicitante-userSapAMod-followup", SESSION_ID, 1,PROYECT_ID);
+            }
+
+        }
+
+
+        /*Chatbot Abastible 1.0 - Desbloqueo y Reemplazo*/
+
+        if (ACTION === "Action.desbloqueo") {
+            let rut = PARAMETERS.rut;
             
             let response = await functions.consultaRut(functions.sendDesbloqueo(rut, SESSION_ID));  
             
             if (response.fulfillmentText !== undefined) { 
-                respuesta = functions.respuestaBasica(response.fulfillmentText, "PRUEBA", SESSION_ID, 2);
+                respuesta = functions.respuestaBasica(response.fulfillmentText, "PRUEBA", SESSION_ID, 1);
             } else {
-                respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 2);
+                respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 1);
             }
         }
 
-        if (action === "Action.Reemplazo-rutSolicitante") {
+        if (ACTION === "Action.Reemplazo-rutSolicitante") {
             
-            let rut = parametros.rutSolicitante;
+            let rut = PARAMETERS.rutSolicitante;
 
             let response = await functions.consultaRut(functions.sendRemplazo(rut, SESSION_ID));
 
@@ -57,8 +85,8 @@ server.post("/", async (req, res) => {
         }
 
 
-        if (action === "Action.Reemplazo-rutReemplazante") {
-            let rut = parametros.rutReemplazado;
+        if (ACTION === "Action.Reemplazo-rutReemplazante") {
+            let rut = PARAMETERS.rutReemplazado;
             let response = await functions.consultaRut(functions.sendRemplazo2(rut, SESSION_ID));
 
             
@@ -71,8 +99,8 @@ server.post("/", async (req, res) => {
             }
         }
 
-        if (action === "Action.Reemplazo-fechas") {
-            console.log("buscando session id" + JSON.stringify(req.body))
+        if (ACTION === "Action.Reemplazo-fechas") {
+            
             let fechaInicio = req.body.originalDetectIntentRequest.payload.formData["Fecha Inicio"];
             let fechaFinal = req.body.originalDetectIntentRequest.payload.formData["Fecha Final"];
            
@@ -84,20 +112,20 @@ server.post("/", async (req, res) => {
             }
         }
 
-        //fallbacks
-        if (action === "fallback-desbloqueo") {
+        
+        if (ACTION === "fallback-desbloqueo") {
             respuesta = functions.respuestaBasica("Debe de ingresar un rut con el siguiente formato XXXXXXXX-X. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 1);
         }
 
-        if (action === "Rut.fallback") {
+        if (ACTION === "Rut.fallback") {
             respuesta = functions.respuestaBasica("Debe de ingresar un rut con el siguiente formato XXXXXXXX-X. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
         }
 
-        if (action === "Rut.fallback.first") {
+        if (ACTION === "Rut.fallback.first") {
             respuesta = functions.respuestaBasica("Debe de ingresar un rut con el siguiente formato XXXXXXXX-X. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-followup", SESSION_ID, 1);
         }
 
-        if (action === "Fechas.fallback") {
+        if (ACTION === "Fechas.fallback") {
             respuesta = functions.respuestaBasica("Debe de ingresar una fecha con el siguiente formato DD-MM-YYY. Intente nuevamente con otra fecha.", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
         }
 
