@@ -22,7 +22,7 @@ server.post("/", async (req, res) => {
     try {
         
 
-        /*Chatbot Abastible 1.1 - Modificar Cuenta, Nueva Cuenta, Asignación Transacción*/
+        /*Chatbot Abastible 1.1 - Modificar Cuenta*/
 
         if (ACTION === "Action.RutSolicitante") {
             let rutSolicitante = PARAMETERS.rutSolicitante;
@@ -40,6 +40,12 @@ server.post("/", async (req, res) => {
             }
         }
 
+        //**Fallback Rut Solicitante**
+
+        if (ACTION === "Fallback.ModificarCuenta.RutSolicitante") {
+            respuesta = functions.basicResponse("Debe de ingresar un Rut correcto. Intente nuevamente con otro RUT:", "DefaultWelcomeIntent-soportesap-modificarcuenta-followup", SESSION_ID, 1);
+        }
+
         if(ACTION === "Action.UserSapAModificar"){
             let usuarioAmodificar = PARAMETERS.usuarioAmodificar;
             
@@ -47,13 +53,83 @@ server.post("/", async (req, res) => {
 
             if(usuarioAmodificar === "gbanchero"){
                 //Si existe el usuario
-                respuesta = functions.basicResponse("Perfecto! Ingrese RUT de usuario a modificar:", "DefaultWelcomeIntent-soportesap-modificarcuenta-rutSolicitante-followup", SESSION_ID, 1,PROYECT_ID);
+                respuesta = functions.basicResponse("Perfecto! Ingrese RUT de usuario a modificar:", "DefaultWelcomeIntent-soportesap-modificarcuenta-rutSolicitante-userSapAMod-followup", SESSION_ID, 1,PROYECT_ID);
             }else{
-                //Si no existe el usuario
-                respuesta = functions.basicResponse("El usuario no fue encontrado. Ingrese usuario a modificar nuevamente:", "DefaultWelcomeIntent-soportesap-modificarcuenta-rutSolicitante-userSapAMod-followup", SESSION_ID, 1,PROYECT_ID);
+                //Si no existe el usuario 
+                respuesta = functions.basicResponse("El usuario no fue encontrado. Ingrese usuario a modificar nuevamente:", "DefaultWelcomeIntent-soportesap-modificarcuenta-rutSolicitante-followup", SESSION_ID, 1,PROYECT_ID);
             }
-
         }
+
+        if(ACTION === "Action.RutUsuNuevo"){
+            let rutNuevoUsuario = PARAMETERS.rutNuevoUsuario;
+
+            //***Voy al servicio a consultar si existe el Rut***
+
+            if(rutNuevoUsuario === "11111111-1"){
+                //Si no existe el Rut nuevo
+                respuesta = functions.formResponse("Complete el siguiente formulario por favor:","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-followup",SESSION_ID,1);
+            }else{
+                //Si existe el Rut nuevo
+                respuesta = functions.basicResponse("Ese Rut ya se encuantra registrado. Ingrese RUT de usuario a modificar:", "DefaultWelcomeIntent-soportesap-modificarcuenta-rutSolicitante-userSapAMod-followup", SESSION_ID, 1,PROYECT_ID);
+            }
+        }
+
+        //**Fallback Rut Nuevo**
+
+        if (ACTION === "Fallback.ModificarCuenta.RutNuevo") {
+            respuesta = functions.basicResponse("Debe de ingresar un Rut correcto. Intente nuevamente con otro RUT:", "DefaultWelcomeIntent-soportesap-modificarcuenta-rutSolicitante-userSapAMod-followup", SESSION_ID, 1);
+        }
+
+        if(ACTION === "Action.FormularioModificarCuenta"){
+           
+            let email = req.body.originalDetectIntentRequest.payload.formData["Email"];
+            let apellido = req.body.originalDetectIntentRequest.payload.formData["Apellido"];
+            let nombre = req.body.originalDetectIntentRequest.payload.formData["Nombre"];
+           
+            //***Voy al servicio a consultar si existe el correo***
+
+            if(email === "gbanchero@gmail.com"){
+                //Si no existe correo 
+                respuesta = functions.basicResponse("Ingrese nuevo usuario de SAP:","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-Form-followup",SESSION_ID,1);
+            }else{
+                //Si existe correo
+                respuesta = functions.formResponseHidden("Ya existe un usuario asociado a ese correo. Ingrese otro correo por favor:", "DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-followup", SESSION_ID, 1,PROYECT_ID,nombre,apellido);
+            }
+        }
+
+        if(ACTION === "Action.NombreUsuarioNuevo"){
+            let nombreUsuarioNuevo = PARAMETERS.nombreUsuarioNuevo;
+
+            if(nombreUsuarioNuevo === "gbanchero12"){
+                //Si no existe nombre usaurio 
+                respuesta = functions.basicResponse("Su solicitud se gestionó correctamente. Recibirá un email a su casilla la brevedad.","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-Form-UsuarioNuevo-followup",SESSION_ID,1);
+            }else{
+                //Si existe nombre usaurio
+                respuesta = functions.basicResponse("Ya existe un usuario con ese nombre. Ingrese otro nombre de usuario por favor:", "DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-Form-followup", SESSION_ID, 1,PROYECT_ID);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         /*Chatbot Abastible 1.0 - Desbloqueo y Reemplazo*/
@@ -64,9 +140,9 @@ server.post("/", async (req, res) => {
             let response = await functions.consultaRut(functions.sendDesbloqueo(rut, SESSION_ID));  
             
             if (response.fulfillmentText !== undefined) { 
-                respuesta = functions.respuestaBasica(response.fulfillmentText, "PRUEBA", SESSION_ID, 1);
+                respuesta = functions.basicResponse(response.fulfillmentText, "PRUEBA", SESSION_ID, 1);
             } else {
-                respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 1);
+                respuesta = functions.basicResponse("No se encontró el RUT. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 1);
             }
         }
 
@@ -77,12 +153,12 @@ server.post("/", async (req, res) => {
             let response = await functions.consultaRut(functions.sendRemplazo(rut, SESSION_ID));
 
             if (response.fulfillmentText !== undefined) { //Se encontró Rut
-                respuesta = functions.respuestaBasica("Ingrese el rut del reemplazado. (11111111-2)", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
+                respuesta = functions.basicResponse("Ingrese el rut del reemplazado. (11111111-2)", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
             } else {//No se encontró Rut
-                respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-followup", SESSION_ID, 1);
+                respuesta = functions.basicResponse("No se encontró el RUT. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-followup", SESSION_ID, 1);
             }           
 
-        }
+        }       
 
 
         if (ACTION === "Action.Reemplazo-rutReemplazante") {
@@ -91,11 +167,11 @@ server.post("/", async (req, res) => {
 
             
             if (response.fulfillmentText !== undefined) { // se econtro rus reemplazante
-                respuesta = functions.respuestaDatePiker("Indique la fecha de inicio y fecha final de reemplazo","DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
+                respuesta = functions.datePikerResponse("Indique la fecha de inicio y fecha final de reemplazo","DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
                 //respuesta = functions.respuestaBasica("Fecha de inicio del remplazo", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
             } else {
                 //no se encontró
-                respuesta = functions.respuestaBasica("No se encontró el RUT. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
+                respuesta = functions.basicResponse("No se encontró el RUT. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
             }
         }
 
@@ -106,27 +182,27 @@ server.post("/", async (req, res) => {
            
             if (fechaInicio < fechaFinal) {
                 let response = await functions.consultaRut(functions.sendDate(fechaInicio, fechaFinal, SESSION_ID));
-                respuesta = functions.respuestaBasica(response.fulfillmentText, "END", SESSION_ID, 1);
+                respuesta = functions.basicResponse(response.fulfillmentText, "END", SESSION_ID, 1);
             } else {
-                respuesta = functions.respuestaDatePiker("La fecha de inicio debe de ser menor. Ingrese nuevamente por favor.","DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
+                respuesta = functions.datePikerResponse("La fecha de inicio debe de ser menor. Ingrese nuevamente por favor.","DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
             }
         }
 
         
         if (ACTION === "fallback-desbloqueo") {
-            respuesta = functions.respuestaBasica("Debe de ingresar un rut con el siguiente formato XXXXXXXX-X. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 1);
+            respuesta = functions.basicResponse("Debe de ingresar un rut con el siguiente formato XXXXXXXX-X. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 1);
         }
 
         if (ACTION === "Rut.fallback") {
-            respuesta = functions.respuestaBasica("Debe de ingresar un rut con el siguiente formato XXXXXXXX-X. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
+            respuesta = functions.basicResponse("Debe de ingresar un rut con el siguiente formato XXXXXXXX-X. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
         }
 
         if (ACTION === "Rut.fallback.first") {
-            respuesta = functions.respuestaBasica("Debe de ingresar un rut con el siguiente formato XXXXXXXX-X. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-followup", SESSION_ID, 1);
+            respuesta = functions.basicResponse("Debe de ingresar un rut con el siguiente formato XXXXXXXX-X. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-followup", SESSION_ID, 1);
         }
 
         if (ACTION === "Fechas.fallback") {
-            respuesta = functions.respuestaBasica("Debe de ingresar una fecha con el siguiente formato DD-MM-YYY. Intente nuevamente con otra fecha.", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
+            respuesta = functions.basicResponse("Debe de ingresar una fecha con el siguiente formato DD-MM-YYY. Intente nuevamente con otra fecha.", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
         }
 
         
