@@ -125,6 +125,15 @@ function formResponse(text, context, sessionId, lifespanCount = 1, proyectId = "
               {
                 "type": "text",
                 "data": {
+                  "label": "Usuario",
+                  "name": "usuario",                  
+                  "validation": { "regex": "[A-Za-z0-9_-\"'!#$%&/()¬=?¡\]]",
+                  "errorText": "Campo obligatorio"}
+                }
+              },
+              {
+                "type": "text",
+                "data": {
                   "label": "Email",
                   "placeholder": "Ingrese su email",
                   "validation": {
@@ -192,6 +201,159 @@ function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyect
               {
                 "type": "text",
                 "data": {
+                  "label": "Usuario",
+                  "name": "usuario",                  
+                  "validation": { "regex": "[A-Za-z0-9_-\"'!#$%&/()¬=?¡\]]",
+                  "errorText": "Campo obligatorio"}
+                }
+              },
+              {
+                "type": "text",
+                "data": {
+                  "label": "Email",
+                  "placeholder": "Ingrese su email",
+                  "validation": {
+                  "regex": "^(([^<>()\\[\\]\\.;:\\s@\"]+(\\.[^<>()[\\]\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$",
+                  "errorText": "Verifique su correo"
+                }
+                }
+              },
+              {
+                "data": {
+                  "action": {
+                    "type": "submit",
+                    "label": "Enviar",
+                    "formAction": "https://abastible-chatbot.herokuapp.com/postData",
+                    "requestType": "postBackToBotPlatform"
+                  },
+                  "name": "Enviar",
+                  "type": "submit"
+                },
+                "type": "submit"
+              }
+            ],
+            "contentType": "300",
+            "templateId": "12"
+          }
+        }
+      }
+    ],
+
+  }
+}
+
+/*
+*Respuesa para generar formulario para modificación de cuenta
+*/
+function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, email) {
+  return {
+    "outputContexts": [
+      {
+        "name": `projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
+        "lifespanCount": lifespanCount
+      }],
+    "fulfillmentMessages": [
+      {
+        "payload": {
+          "platform": "kommunicate",
+          "message": text,
+          "metadata": {
+            "payload": [
+              {
+                "type": "hidden",
+                "data": {
+                  "name": "Nombre",
+                  "value": nombre
+                }
+              },
+              {
+                "type": "hidden",
+                "data": {
+                  "name": "Apellido",
+                  "value": apellido
+                }
+              },
+              {
+                "type": "hidden",
+                "data": {
+                  "name": "Email",
+                  "value": email
+                }
+              },
+              {
+                "type": "text",
+                "data": {
+                  "label": "Usuario",
+                  "name": "usuario",                  
+                  "validation": { "regex": "[A-Za-z0-9_-\"'!#$%&/()¬=?¡\]]",
+                  "errorText": "Campo obligatorio"}
+                }
+              },              
+              {
+                "data": {
+                  "action": {
+                    "type": "submit",
+                    "label": "Enviar",
+                    "formAction": "https://abastible-chatbot.herokuapp.com/postData",
+                    "requestType": "postBackToBotPlatform"
+                  },
+                  "name": "Enviar",
+                  "type": "submit"
+                },
+                "type": "submit"
+              }
+            ],
+            "contentType": "300",
+            "templateId": "12"
+          }
+        }
+      }
+    ],
+
+  }
+}
+
+/*
+*Respuesa para generar formulario para modificación de cuenta
+*/
+function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, user) {
+  return {
+    "outputContexts": [
+      {
+        "name": `projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
+        "lifespanCount": lifespanCount
+      }],
+    "fulfillmentMessages": [
+      {
+        "payload": {
+          "platform": "kommunicate",
+          "message": text,
+          "metadata": {
+            "payload": [
+              {
+                "type": "hidden",
+                "data": {
+                  "name": "Nombre",
+                  "value": nombre
+                }
+              },
+              {
+                "type": "hidden",
+                "data": {
+                  "name": "Apellido",
+                  "value": apellido
+                }
+              },
+              {
+                "type": "hidden",
+                "data": {
+                  "name": "Usuario",
+                  "value": user
+                }
+              },
+              {
+                "type": "text",
+                "data": {
                   "label": "Email",
                   "placeholder": "Ingrese su email",
                   "validation": {
@@ -245,6 +407,8 @@ module.exports = {
   sendDate,
   sendDesbloqueo,
   formResponse,
-  formResponseHidden
+  formResponseHidden,
+  formResponseHiddenMail,
+  formResponseHiddenUser
 }
 

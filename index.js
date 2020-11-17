@@ -22,6 +22,37 @@ server.post("/", async (req, res) => {
     try {
         
 
+        /*Chatbot Abastible 1.1 - Asignacion Transacción*/
+        //
+        // Params           Action                                                  Context heredado                                                            Comentarios
+        //1 rutSolicitante  Action.AsignacionTransaccion.RutSolicitante             DWI-soportesap-asignTransac-followup
+        //2 usuarioAasignar Action.AsignacionTransaccion.UsuarioAasignar            DWI-soportesap-asignTransac-rutSolicitante-followup
+        //3 transacción     Action.AsignacionTransaccion.Transaccion                DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-followup             Cuando existe arroja: Es temporal? bubbles SI NO
+        //4 YES [Fecha]     Action.AsignacionTransaccion.Yes                        DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-transaccion-followup 
+        //5 NO                                                                                                                                                  Recibe No como accion! Su solicitud se gestionó correctamente. Recibirá un email a su casilla la brevedad.
+
+        //6 Fecha           Action.AsignacionTransaccion.Fecha.Dato                 DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-transaccion-yes-followup
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /*Chatbot Abastible 1.1 - Modificar Cuenta*/
 
         if (ACTION === "Action.RutSolicitante") {
@@ -109,17 +140,7 @@ server.post("/", async (req, res) => {
                 
         }
 
-        /*if(ACTION === "Action.NombreUsuarioNuevo"){
-            let nombreUsuarioNuevo = PARAMETERS.nombreUsuarioNuevo;
-
-            if(nombreUsuarioNuevo === "gbanchero12"){
-                //Si no existe nombre usaurio 
-                respuesta = functions.basicResponse("Su solicitud se gestionó correctamente. Recibirá un email a su casilla la brevedad.","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-Form-UsuarioNuevo-followup",SESSION_ID,1);
-            }else{
-                //Si existe nombre usaurio
-                respuesta = functions.basicResponse("Ya existe un usuario con ese nombre. Ingrese otro nombre de usuario por favor:", "DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-Form-followup", SESSION_ID, 1,PROYECT_ID);
-            }
-        }*/
+        
 
 
 
