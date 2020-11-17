@@ -85,31 +85,19 @@ server.post("/", async (req, res) => {
             let email = req.body.originalDetectIntentRequest.payload.formData["Email"];
             let apellido = req.body.originalDetectIntentRequest.payload.formData["Apellido"];
             let nombre = req.body.originalDetectIntentRequest.payload.formData["Nombre"];
-            let usuario = req.body.originalDetectIntentRequest.payload.formData["Usuario"];
-            //***Voy al servicio a consultar si existe el correo y el usuario***
-            console.log(apellido,nombre)
-            console.log("////////////////////////////////////////",email,usuario)
-            //caso 1: me vienen el usuario y el correo OK
-            if(email === "gbanchero@gmail.com" && usuario === "gbanchero")              
-                respuesta = functions.basicResponse("Su solicitud se gestionó correctamente. Recibirá un email a su casilla la brevedad.","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-Form-followup",SESSION_ID,1);
-            
+           
+            //***Voy al servicio a consultar si existe el correo***
 
-            //caso 2: me vienen usuario y correo existentes
-            if(email !== "gbanchero@gmail.com" && usuario !== "gbanchero")             
-                respuesta = functions.formResponseHidden("Usuario y correo ya existen, ingrese nuevamente por favor:","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-followup",SESSION_ID,1,PROYECT_ID,nombre,apellido);
-            
-
-            //caso 3: me vienen correo existente
-            if(email !== "gbanchero@gmail.com" && usuario === "gbanchero")
-                respuesta = functions.formResponseHiddenUser("Correo ya existe. Ingrese nuevamente:","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-followup",SESSION_ID,1,PROYECT_ID,nombre,apellido,usuario);            
-                
-            //caso 4: me vienen usuario existente
-            if(email === "gbanchero@gmail.com" && usuario !== "gbanchero")
-                respuesta = functions.formResponseHiddenMail("Usuario ya existe. Ingrese nuevamente:","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-followup",SESSION_ID,1,PROYECT_ID,nombre,apellido,email);            
-                
+            if(email === "gbanchero@gmail.com"){
+                //Si no existe correo 
+                respuesta = functions.basicResponse("Ingrese nuevo usuario de SAP:","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-Form-followup",SESSION_ID,1);
+            }else{
+                //Si existe correo
+                respuesta = functions.formResponseHidden("Ya existe un usuario asociado a ese correo. Ingrese otro correo por favor:", "DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-followup", SESSION_ID, 1,PROYECT_ID,nombre,apellido);
+            }
         }
 
-        /*if(ACTION === "Action.NombreUsuarioNuevo"){
+        if(ACTION === "Action.NombreUsuarioNuevo"){
             let nombreUsuarioNuevo = PARAMETERS.nombreUsuarioNuevo;
 
             if(nombreUsuarioNuevo === "gbanchero12"){
@@ -119,7 +107,7 @@ server.post("/", async (req, res) => {
                 //Si existe nombre usaurio
                 respuesta = functions.basicResponse("Ya existe un usuario con ese nombre. Ingrese otro nombre de usuario por favor:", "DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-Form-followup", SESSION_ID, 1,PROYECT_ID);
             }
-        }*/
+        }
 
 
 
