@@ -86,9 +86,59 @@ function datePikerResponse(text, context, sessionId, lifespanCount = 1, proyectI
   }
 }
 
+/*
+*Respuesa para generar formulario con 1 fechaa
+*/
+function oneDatePikerResponse(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx") {
+  return {
+
+    "outputContexts": [
+      {
+        "name": `projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
+        "lifespanCount": lifespanCount
+      }],
+    "fulfillmentMessages": [
+      {
+        "payload": {
+          "platform": "kommunicate",
+          "message": text,
+          "metadata": {
+            "payload": [
+              {
+                "type": "date",
+                "data": {
+                  "label": "Fecha",
+                  "name": "fecha",
+                  "validation": { "errorText": "Field is mandatory" }
+                }
+              },              
+              {
+                "data": {
+                  "action": {
+                    "type": "submit",
+                    "label": "Enviar",
+                    "formAction": "https://abastible-chatbot.herokuapp.com/postData",
+                    "requestType": "postBackToBotPlatform"
+                  },
+                  "name": "Enviar",
+                  "type": "submit"
+                },
+                "type": "submit"
+              }
+            ],
+            "contentType": "300",
+            "templateId": "12"
+          }
+        }
+      }
+    ],
+
+  }
+}
+
 
 /*
-*Respuesa para generar formulario para modificación de cuenta
+*Respuesa para generar formulario para modificación de cuenta 1
 */
 function formResponse(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx") {
   return {
@@ -168,7 +218,7 @@ function formResponse(text, context, sessionId, lifespanCount = 1, proyectId = "
 
 
 /*
-*Respuesa para generar formulario para modificación de cuenta
+*Respuesa para generar formulario para modificación de cuenta 2
 */
 function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido) {
   return {
@@ -243,7 +293,7 @@ function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyect
 }
 
 /*
-*Respuesa para generar formulario para modificación de cuenta
+*Respuesa para generar formulario para modificación de cuenta 3
 */
 function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, email) {
   return {
@@ -314,7 +364,7 @@ function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, pro
 }
 
 /*
-*Respuesa para generar formulario para modificación de cuenta
+*Respuesa para generar formulario para modificación de cuenta 4
 */
 function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, user) {
   return {
@@ -386,6 +436,35 @@ function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, pro
   }
 }
 
+function suggestionChipsResponse(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx") {
+  return {"outputContexts": [
+    {
+      "name": `projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
+      "lifespanCount": lifespanCount
+    }],
+  "fulfillmentMessages": [
+    {
+      "payload": {
+        "message": text,
+        "platform": "kommunicate",
+        "metadata": {
+          "contentType": "300",
+          "templateId": "6",
+          "payload": [{
+            "title": "Si",
+            "message": "Si"
+          }, {
+            "title": "No",
+            "message": "No"
+          }]
+        }
+      }
+    }
+  ],
+}
+}
+  
+
 /*
 *Interección con API de MC
 */
@@ -409,6 +488,8 @@ module.exports = {
   formResponse,
   formResponseHidden,
   formResponseHiddenMail,
-  formResponseHiddenUser
+  formResponseHiddenUser,
+  oneDatePikerResponse,
+  suggestionChipsResponse,
 }
 

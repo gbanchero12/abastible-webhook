@@ -36,8 +36,66 @@ server.post("/", async (req, res) => {
 
 
 
+        if (ACTION === "Action.AsignacionTransaccion.RutSolicitante") {
+            let rutSolicitante = PARAMETERS.rutSolicitante;
+            
+            
+            if (rutSolicitante === "11111111-1") { 
+                //***Voy al servicio a consultar si existe el Rut y si tiene perfil Jefatura***
+                respuesta = functions.basicResponse("Ingrese usuario de SAP a asignar transaccion:", "DWI-soportesap-asignTransac-rutSolicitante-followup", SESSION_ID, 1,PROYECT_ID);
+            }else {
+                //Si el Rut no existe devuelvo esto:
+                respuesta = functions.basicResponse("Rut no existe. Intente nuevamente con otro RUT. (11111111-1)", "DWI-soportesap-asignTransac-followup", SESSION_ID, 1);
+                //Si el perfil no está habilitado devuelvo esto:
+                if(rutSolicitante === "11111111-2") //este IF no va, es solo para simular perfil no habilitado
+                respuesta = functions.basicResponse("Su perfil no tiene autorización para asignar transaccion. Intente nuevamente con otro RUT. (11111111-1)", "DWI-soportesap-asignTransac-followup", SESSION_ID, 1);
+            }
+        }
 
+        if(ACTION === "Action.AsignacionTransaccion.UsuarioAasignar"){
+            let usuarioAasignar = PARAMETERS.usuarioAasignar;
+            
+            //***Voy al servicio a consultar si existe el usuario***
 
+            if(usuarioAasignar === "gbanchero"){
+                //Si existe el usuario
+                respuesta = functions.basicResponse("Perfecto! Ingrese transacción a asignar:", "DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-followup", SESSION_ID, 1,PROYECT_ID);
+            }else{
+                //Si no existe el usuario 
+                respuesta = functions.basicResponse("El usuario no fue encontrado. Ingrese usuario para asignar transacción nuevamente:", "DWI-soportesap-asignTransac-rutSolicitante-followup", SESSION_ID, 1,PROYECT_ID);
+            }
+        }
+
+        if(ACTION === "Action.AsignacionTransaccion.Transaccion"){
+            let transaccion = PARAMETERS.transaccion;
+            
+            //***Voy al servicio a consultar si existe la transacción***
+
+            if(transaccion.toUpperCase() === "FBL1N"){
+                //Si existe la transaccion
+                respuesta = functions.suggestionChipsResponse("¿Es una asignación temporal?", "DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-transaccion-followup", SESSION_ID, 1,PROYECT_ID);
+            }else{
+                //Si la transaccion no existe
+                respuesta = functions.basicResponse("La transacción no fue encontrada. Intente nuevamente:", "DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-followup", SESSION_ID, 1,PROYECT_ID);
+            }
+        }
+
+        if(ACTION === "Action.AsignacionTransaccion.Yes"){
+            respuesta = functions.oneDatePikerResponse("Ingrese fecha de finalización:","DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-transaccion-yes-followup",SESSION_ID,1,PROYECT_ID);
+        }
+
+        if(ACTION === "Action.AsignacionTransaccion.Fecha.Dato"){
+            let fecha = req.body.originalDetectIntentRequest.payload.formData["Fecha"];
+            console.log("///////////////////////////////////////////////////",fecha)
+            if(fecha <= new Date()){
+                respuesta = functions.oneDatePikerResponse("Debe de ser una fecha futura, ingrese nuevamente:", "DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-transaccion-yes-followup", SESSION_ID, 1,PROYECT_ID);
+            }else{
+                respuesta = functions.basicResponse("Su solicitud se gestionó correctamente. Recibirá un email a su casilla la brevedad.", "End", SESSION_ID, 1,PROYECT_ID);
+            }
+        }
+
+        if(ACTION ==="Action.AsignacionTransaccion.Transaccion.NO")
+            respuesta = functions.basicResponse("Su solicitud se gestionó correctamente. Recibirá un email a su casilla la brevedad.", "End", SESSION_ID, 1,PROYECT_ID);
 
 
 
