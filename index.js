@@ -37,7 +37,7 @@ server.post("/", async (req, res) => {
 
 
         if (ACTION === "Action.AsignacionTransaccion.RutSolicitante") {
-            let rutSolicitante = PARAMETERS.rutSolicitante;
+            let rutSolicitante = PARAMETERS.rutSolicitante;//controlar cantidad de caracteres 
             
             
             if (rutSolicitante === "11111111-1") { 
@@ -52,8 +52,12 @@ server.post("/", async (req, res) => {
             }
         }
 
+        if(ACTION === "Action.AsignacionTransaccion.RutSolicitante.fallback"){
+            respuesta = functions.basicResponse("Ingrese un Rut válido", "DWI-soportesap-asignTransac-followup", SESSION_ID, 1,PROYECT_ID);
+        }
+
         if(ACTION === "Action.AsignacionTransaccion.UsuarioAasignar"){
-            let usuarioAasignar = PARAMETERS.usuarioAasignar;
+            let usuarioAasignar = PARAMETERS.usuarioAasignar;//controlar cantidad de caracteres 
             
             //***Voy al servicio a consultar si existe el usuario***
 
@@ -67,7 +71,7 @@ server.post("/", async (req, res) => {
         }
 
         if(ACTION === "Action.AsignacionTransaccion.Transaccion"){
-            let transaccion = PARAMETERS.transaccion;
+            let transaccion = PARAMETERS.transaccion; //controlar cantidad de caracteres 
             
             //***Voy al servicio a consultar si existe la transacción***
 
@@ -80,14 +84,24 @@ server.post("/", async (req, res) => {
             }
         }
 
+        if(ACTION === "Action.AsignacionTransaccion.Transaccion.Fallback"){
+            respuesta = functions.suggestionChipsResponse("Disculpa no te he comprendido. ¿Es una asignación temporal?", "DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-transaccion-followup", SESSION_ID, 1,PROYECT_ID);
+        }
+
         if(ACTION === "Action.AsignacionTransaccion.Yes"){
             respuesta = functions.oneDatePikerResponse("Ingrese fecha de finalización:","DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-transaccion-yes-followup",SESSION_ID,1,PROYECT_ID);
         }
 
+        if(ACTION === "Action.AsignacionTransaccion.Yes.Fecha.Fallback"){
+            respuesta = functions.oneDatePikerResponse("Ingrese una fecha válida", "DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-transaccion-yes-followup", SESSION_ID, 1,PROYECT_ID);
+        }
+
+        
+
         if(ACTION === "Action.AsignacionTransaccion.Fecha.Dato"){
             let fecha = req.body.originalDetectIntentRequest.payload.formData["Fecha"];
             console.log("///////////////////////////////////////////////////",fecha)
-            if(fecha <= new Date()){
+            if(new Date(fecha) <= new Date()){
                 respuesta = functions.oneDatePikerResponse("Debe de ser una fecha futura, ingrese nuevamente:", "DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-transaccion-yes-followup", SESSION_ID, 1,PROYECT_ID);
             }else{
                 respuesta = functions.basicResponse("Su solicitud se gestionó correctamente. Recibirá un email a su casilla la brevedad.", "End", SESSION_ID, 1,PROYECT_ID);
