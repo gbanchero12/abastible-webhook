@@ -253,7 +253,7 @@ function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyect
                 "data": {
                   "label": labelUsuario,
                   "name": "usuario",                  
-                  "validation": { "regex": "[A-Za-z0-9_-\"'!#$%&/()¬=?¡\]]",
+                  "validation": { "regex": "^[A-Za-z0-9_-\"'!#$%&/()¬=?¡\]]$",
                   "errorText": "Campo obligatorio"}
                 }
               },
