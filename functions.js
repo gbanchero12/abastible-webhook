@@ -631,7 +631,7 @@ function formResponseNewAccount2(text, context, sessionId, lifespanCount = 1, pr
               {
                 "type": "text",
                 "data": {
-                  "label": "Correo Usuario Nuevo",                  
+                  "label": "Correo Nuevo Usuario",                  
                   "validation": {
                   "regex": "^(([^<>()\\[\\]\\.;:\\s@\"]+(\\.[^<>()[\\]\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$",
                   "errorText": "Verifique correo"
