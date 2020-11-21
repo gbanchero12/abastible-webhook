@@ -96,6 +96,7 @@ server.post("/", async (req, res) => {
             let nuevoUsuario = req.body.originalDetectIntentRequest.payload.formData["Usuario SAP"];
 
             console.log("//////////////////////" + correoNuevoUsuario)
+            console.log(JSON.stringify(req.body.originalDetectIntentRequest.payload));
             console.log("//////////////////////" + nuevoUsuario)
             //caso 1: me vienen el usuario y el correo NUEVOS
             if(nuevoUsuario.length <= LARGO_USER_SAP_MAX && correoNuevoUsuario === "fsilva@gmail.com" && nuevoUsuario === "fsilva")              

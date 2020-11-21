@@ -365,7 +365,7 @@ function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, pro
 /*
 *Respuesa para generar formulario para modificación de cuenta 4
 */
-function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, user,labelUsuario = "Usuario", labelEmail = "Email") {
+function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, user, labelUsuario = "Usuario", labelEmail = "Email") {
   return {
     "outputContexts": [
       {
