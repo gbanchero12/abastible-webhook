@@ -109,15 +109,15 @@ server.post("/", async (req, res) => {
 
             //caso 3: me vienen correo EXISTENTES
             if(correoNuevoUsuario !== "fsilva@gmail.com" && nuevoUsuario === "fsilva")
-                respuesta = functions.formResponseHiddenUser("Correo ya existe. Ingrese nuevamente:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-area-followup",SESSION_ID,1,PROYECT_ID,"EMPTY","EMPTY",nuevoUsuario,"Correo Nuevo Usuario");            
+                respuesta = functions.formResponseHiddenUser("Correo ya existe. Ingrese nuevamente:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-area-followup",SESSION_ID,1,PROYECT_ID,"EMPTY","EMPTY",nuevoUsuario,"Usuario SAP","Correo Nuevo Usuario");            
                 
             //caso 4: me vienen usuario EXISTENTES
             if(correoNuevoUsuario === "fsilva@gmail.com" && nuevoUsuario !== "fsilva")
-                respuesta = functions.formResponseHiddenMail("Usuario ya existe. Ingrese nuevamente:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-area-followup",SESSION_ID,1,PROYECT_ID,"EMPTY","EMPTY",correoNuevoUsuario,"Usuario SAP");            
+                respuesta = functions.formResponseHiddenMail("Usuario ya existe. Ingrese nuevamente:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-area-followup",SESSION_ID,1,PROYECT_ID,"EMPTY","EMPTY",correoNuevoUsuario,"Usuario SAP","Correo Nuevo Usuario");            
 
             //caso 5: largo de usuario
             if(nuevoUsuario.length > LARGO_USER_SAP_MAX && correoNuevoUsuario === "fsilva@gmail.com" && nuevoUsuario === "fsilva")
-            respuesta = functions.formResponseHiddenMail("El usuario puede contener hasta 12 caracteres. Ingrese nuevamente:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-area-followup",SESSION_ID,1,PROYECT_ID,"EMPTY","EMPTY",correoNuevoUsuario);            
+            respuesta = functions.formResponseHiddenMail("El usuario puede contener hasta 12 caracteres. Ingrese nuevamente:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-area-followup",SESSION_ID,1,PROYECT_ID,"EMPTY","EMPTY",correoNuevoUsuario,"Usuario SAP","Correo Nuevo Usuario");            
         }
 
         if(ACTION === "Action.NuevaCuenta.UsuarioAHomologar"){
