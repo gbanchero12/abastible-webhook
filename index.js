@@ -17,23 +17,184 @@ server.post("/", async (req, res) => {
     const PROYECT_ID = request.PROYECT_ID;
     const ACTION = request.ACTION;
     const PARAMETERS = request.PARAMS;
+    const LARGO_RUT_MAX = 10;
+    const LARGO_USER_SAP_MAX = 12;
+
+    /*Se pueden cargar a partir de una llamada a un endpoint*/
+    const CARGOS = ["Presidente", "Gerente","Analista Jr","Analista Sr.","Cadete","Jefe 1","Jefe 2","Jefe de zona Norte","Supervisor 1","Supervisor 2","Otro","Jefe de zona Sur","Jefe de zona Oeste","Jefe de zona Este"];
+    const AREAS = ["Mantenimiento","Comercial","Finanzas","Administración","Recursos Humanos","Gerencia general","Gerencias regionales","RSE","Área ejemplo","Otra","Área ejemplo 3","Área ejemplo 4","Área ejemplo 5","Área ejemplo 6","Área ejemplo 7","Área ejemplo 8","Area ejemplo 3","Area ejemplo 4","Area ejemplo 5","Area ejemplo 6","Area ejemplo 7","Area ejemplo 8"];
 
     let respuesta;
     try {
+
+         /*Chatbot Abastible 1.1 - Nueva Cuenta*/
+
+         if (ACTION === "Action.NuevaCuenta.RutSolicitante") {
+            let rutSolicitante = PARAMETERS.rutSolicitante;
+            
+            
+            if (rutSolicitante === "11111111-1" && rutSolicitante.length <= LARGO_RUT_MAX) { 
+                //***Voy al servicio a consultar si existe el Rut y si tiene perfil Jefatura***
+                respuesta = functions.formResponseNewAccount("Ingrese los siguientes datos correspondientes al nuevo usuario:", "DWI-soportesap-nuevacuenta-rutsolicitante-followup", SESSION_ID, 1,PROYECT_ID);
+            }else {
+                //Si el Rut no existe devuelvo esto:
+                respuesta = functions.basicResponse("Rut no existe. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-nuevacuenta-followup", SESSION_ID, 1);
+                //Si el perfil no está habilitado devuelvo esto:
+                if(rutSolicitante === "11111111-2") //este IF no va, es solo para simular perfil no habilitado
+                respuesta = functions.basicResponse("Su perfil no tiene autorización para crear nueva cuenta. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-nuevacuenta-followup", SESSION_ID, 1);
+            }
+        }
+
+        if(ACTION === "Action.NuevaCuenta.PrimerForm"){
+            let rutNuevoUsuario = req.body.originalDetectIntentRequest.payload.formData["Rut Usuario Nuevo"];
+            let nombre = req.body.originalDetectIntentRequest.payload.formData["Nombre"];
+            let apellido = req.body.originalDetectIntentRequest.payload.formData["Apellido"];
+
+            
+            
+            /*Check usuario existe*/
+
+            if(rutNuevoUsuario === "11111111-2")    // No existe
+                {
+                    respuesta = functions.suggestionResponse("Ingrese Cargo: (Jefe)","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-followup",SESSION_ID,1,PROYECT_ID, CARGOS);
+                }else{ //Si existe
+                    respuesta = functions.formResponseNewAccountHidden("Rut existente. Ingrese un Rut nuevo por favor:","DWI-soportesap-nuevacuenta-rutsolicitante-followup",SESSION_ID,1,PROYECT_ID,nombre,apellido)
+                }
+        }
+
+        if(ACTION === "Action.NuevaCuenta.Cargo"){
+            let cargo = PARAMETERS.cargo;
+
+            
+            
+            /*Check usuario existe*/
+
+            if(CARGOS.includes(cargo)) //el cargo está dentro de la lista
+                {
+                    respuesta = functions.suggestionResponse("Ingrese Área: (Área ejemplo)","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-followup",SESSION_ID,1,PROYECT_ID, AREAS);
+                }else{ //Si no está en la lista de cargos
+                    respuesta = functions.suggestionResponse("Cargo desconocido, ingrese cargo nuevamente:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-followup",SESSION_ID,1,PROYECT_ID, CARGOS);
+                }
+        }
+
+        if(ACTION === "Action.NuevaCuenta.Area"){
+            let area = PARAMETERS.area;
+
+            /*Check usuario existe*/
+            if(AREAS.includes(area)) //el area está dentro de la lista
+                {
+                    respuesta = functions.
+                        formResponseNewAccount2("Perfecto! Necesito estos últimos datos correspondientes al nuevo usuario a crear:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-area-followup",SESSION_ID,1,PROYECT_ID);
+                }else{ //Si no está en la lista de areas
+                    respuesta = functions.
+                        suggestionResponse("Área desconocida, ingrese área nuevamente por favor:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-followup",SESSION_ID,1,PROYECT_ID, AREAS);
+                }
+        }
+
+        if(ACTION === "Action.NuevaCuenta.SegundoForm"){
+            let correoNuevoUsuario = req.body.originalDetectIntentRequest.payload.formData["Correo Usuario Nuevo"];
+            let nuevoUsuario = req.body.originalDetectIntentRequest.payload.formData["Usuario SAP"];
+
+            console.log("//////////////////////" + correoNuevoUsuario)
+            console.log("//////////////////////" + nuevoUsuario)
+            //caso 1: me vienen el usuario y el correo NUEVOS
+            if(nuevoUsuario.length <= LARGO_USER_SAP_MAX && correoNuevoUsuario === "fsilva@gmail.com" && nuevoUsuario === "fsilva")              
+                respuesta = functions.basicResponse("Ingrese usuario a homologar:","nuevacuenta-rutsolicitante-primerForm-cargo-area-segundoForm-followup",SESSION_ID,1);
+            
+
+            //caso 2: me vienen usuario y correo EXISTENTES
+            if(correoNuevoUsuario !== "fsilva@gmail.com" && nuevoUsuario !== "fsilva")             
+                respuesta = functions.formResponseHidden("Usuario y correo ya existen, ingrese nuevamente por favor:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-area-followup",SESSION_ID,1,PROYECT_ID,"EMPTY","EMPTY","Usuario SAP","Correo Nuevo Usuario");
+            
+
+            //caso 3: me vienen correo EXISTENTES
+            if(correoNuevoUsuario !== "fsilva@gmail.com" && nuevoUsuario === "fsilva")
+                respuesta = functions.formResponseHiddenUser("Correo ya existe. Ingrese nuevamente:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-area-followup",SESSION_ID,1,PROYECT_ID,"EMPTY","EMPTY",nuevoUsuario,"Correo Nuevo Usuario");            
+                
+            //caso 4: me vienen usuario EXISTENTES
+            if(correoNuevoUsuario === "fsilva@gmail.com" && nuevoUsuario !== "fsilva")
+                respuesta = functions.formResponseHiddenMail("Usuario ya existe. Ingrese nuevamente:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-area-followup",SESSION_ID,1,PROYECT_ID,"EMPTY","EMPTY",correoNuevoUsuario,"Usuario SAP");            
+
+            //caso 5: largo de usuario
+            if(nuevoUsuario.length > LARGO_USER_SAP_MAX && correoNuevoUsuario === "fsilva@gmail.com" && nuevoUsuario === "fsilva")
+            respuesta = functions.formResponseHiddenMail("El usuario puede contener hasta 12 caracteres. Ingrese nuevamente:","DWI-soportesap-nuevacuenta-rutsolicitante-primerForm-cargo-area-followup",SESSION_ID,1,PROYECT_ID,"EMPTY","EMPTY",correoNuevoUsuario);            
+        }
+
+        if(ACTION === "Action.NuevaCuenta.UsuarioAHomologar"){
+            let usuarioAhomologar = PARAMETERS.usuarioAhomologar;
+
+            if(usuarioAhomologar === "fsilva"){
+                respuesta = functions.suggestionChipsResponse("¿Es una cuenta temporal?","cargo-area-segundoForm-usuAhomologar-followup",SESSION_ID,1);
+            }else{
+                respuesta = functions.basicResponse("Usuario inexistente. Ingrese usuario a homologar:","nuevacuenta-rutsolicitante-primerForm-cargo-area-segundoForm-followup",SESSION_ID,1);
+            }
+
+        }
+
+        if(ACTION === "Action.NuevaCuenta.NO"){
+            respuesta = functions
+                .basicResponse("Su solicitud se gestionó correctamente. Recibirá un email a su casilla la brevedad.","endNo",SESSION_ID,1);
+        }
+
+        if(ACTION === "Action.NuevaCuenta.SI"){
+            respuesta = functions
+                .oneDatePikerResponse("Ingrese fecha de caducidad","cargo-area-segundoForm-usuAhomologar-yes-followup",SESSION_ID,1);
+        }
+
+        if(ACTION === "Action.NuevaCuenta.FechaCaducidad"){
+            let fecha = req.body.originalDetectIntentRequest.payload.formData["Fecha"];
+            console.log("///////////////////////////////////////////////////",fecha)
+            if(new Date(fecha) <= new Date()){
+                respuesta = functions.oneDatePikerResponse("Debe de ser una fecha futura, ingrese nuevamente:", "cargo-area-segundoForm-usuAhomologar-yes-followup", SESSION_ID, 1,PROYECT_ID);
+            }else{
+                respuesta = functions.basicResponse("Su solicitud se gestionó correctamente. Recibirá un email a su casilla la brevedad.", "EndYes", SESSION_ID, 1,PROYECT_ID);
+            }
+        }
+        
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 
         /*Chatbot Abastible 1.1 - Asignacion Transacción*/
-        //
-        // Params           Action                                                  Context heredado                                                            Comentarios
-        //1 rutSolicitante  Action.AsignacionTransaccion.RutSolicitante             DWI-soportesap-asignTransac-followup
-        //2 usuarioAasignar Action.AsignacionTransaccion.UsuarioAasignar            DWI-soportesap-asignTransac-rutSolicitante-followup
-        //3 transacción     Action.AsignacionTransaccion.Transaccion                DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-followup             Cuando existe arroja: Es temporal? bubbles SI NO
-        //4 YES [Fecha]     Action.AsignacionTransaccion.Yes                        DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-transaccion-followup 
-        //5 NO                                                                                                                                                  Recibe No como accion! Su solicitud se gestionó correctamente. Recibirá un email a su casilla la brevedad.
-
-        //6 Fecha           Action.AsignacionTransaccion.Fecha.Dato                 DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-transaccion-yes-followup
-
-
+        
 
 
         if (ACTION === "Action.AsignacionTransaccion.RutSolicitante") {
@@ -61,7 +222,7 @@ server.post("/", async (req, res) => {
             
             //***Voy al servicio a consultar si existe el usuario***
 
-            if(usuarioAasignar === "gbanchero"){
+            if(usuarioAasignar === "fsilva"){
                 //Si existe el usuario
                 respuesta = functions.basicResponse("Perfecto! Ingrese transacción a asignar:", "DWI-soportesap-asignTransac-rutSolicitante-UsuAasignar-followup", SESSION_ID, 1,PROYECT_ID);
             }else{
@@ -154,7 +315,7 @@ server.post("/", async (req, res) => {
             
             //***Voy al servicio a consultar si existe el Rut y si tiene perfil Jefatura***
 
-            if(usuarioAmodificar === "gbanchero"){
+            if(usuarioAmodificar === "fsilva"){
                 //Si existe el usuario
                 respuesta = functions.basicResponse("Perfecto! Ingrese RUT de usuario a modificar:", "DefaultWelcomeIntent-soportesap-modificarcuenta-rutSolicitante-userSapAMod-followup", SESSION_ID, 1,PROYECT_ID);
             }else{
@@ -193,21 +354,21 @@ server.post("/", async (req, res) => {
             console.log(apellido,nombre)
             console.log("////////////////////////////////////////",email,usuario)
             //caso 1: me vienen el usuario y el correo OK
-            if(email === "gbanchero@gmail.com" && usuario === "gbanchero")              
+            if(email === "fsilva@gmail.com" && usuario === "fsilva")              
                 respuesta = functions.basicResponse("Su solicitud se gestionó correctamente. Recibirá un email a su casilla la brevedad.","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-Form-followup",SESSION_ID,1);
             
 
             //caso 2: me vienen usuario y correo existentes
-            if(email !== "gbanchero@gmail.com" && usuario !== "gbanchero")             
+            if(email !== "fsilva@gmail.com" && usuario !== "fsilva")             
                 respuesta = functions.formResponseHidden("Usuario y correo ya existen, ingrese nuevamente por favor:","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-followup",SESSION_ID,1,PROYECT_ID,nombre,apellido);
             
 
             //caso 3: me vienen correo existente
-            if(email !== "gbanchero@gmail.com" && usuario === "gbanchero")
+            if(email !== "fsilva@gmail.com" && usuario === "fsilva")
                 respuesta = functions.formResponseHiddenUser("Correo ya existe. Ingrese nuevamente:","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-followup",SESSION_ID,1,PROYECT_ID,nombre,apellido,usuario);            
                 
             //caso 4: me vienen usuario existente
-            if(email === "gbanchero@gmail.com" && usuario !== "gbanchero")
+            if(email === "fsilva@gmail.com" && usuario !== "fsilva")
                 respuesta = functions.formResponseHiddenMail("Usuario ya existe. Ingrese nuevamente:","DWI-sopsap-modifcuen-rutSoli-UsuAMod-rutUsuNue-followup",SESSION_ID,1,PROYECT_ID,nombre,apellido,email);            
                 
         }

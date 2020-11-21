@@ -139,6 +139,7 @@ function oneDatePikerResponse(text, context, sessionId, lifespanCount = 1, proye
 
 /*
 *Respuesa para generar formulario para modificación de cuenta 1
+* NOMBRE APELLIDO USAURIO EMAIL
 */
 function formResponse(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx") {
   return {
@@ -220,7 +221,7 @@ function formResponse(text, context, sessionId, lifespanCount = 1, proyectId = "
 /*
 *Respuesa para generar formulario para modificación de cuenta 2
 */
-function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido) {
+function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, labelUsuario = "Usuario", labelEmail = "Email") {
   return {
     "outputContexts": [
       {
@@ -251,7 +252,7 @@ function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyect
               {
                 "type": "text",
                 "data": {
-                  "label": "Usuario",
+                  "label": labelUsuario,
                   "name": "usuario",                  
                   "validation": { "regex": "[A-Za-z0-9_-\"'!#$%&/()¬=?¡\]]",
                   "errorText": "Campo obligatorio"}
@@ -260,7 +261,7 @@ function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyect
               {
                 "type": "text",
                 "data": {
-                  "label": "Email",
+                  "label": labelEmail,
                   "placeholder": "Ingrese su email",
                   "validation": {
                   "regex": "^(([^<>()\\[\\]\\.;:\\s@\"]+(\\.[^<>()[\\]\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$",
@@ -295,7 +296,7 @@ function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyect
 /*
 *Respuesa para generar formulario para modificación de cuenta 3
 */
-function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, email) {
+function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, email, labelUsuario = "Usuario") {
   return {
     "outputContexts": [
       {
@@ -333,7 +334,7 @@ function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, pro
               {
                 "type": "text",
                 "data": {
-                  "label": "Usuario",
+                  "label": labelUsuario,
                   "name": "usuario",                  
                   "validation": { "regex": "[A-Za-z0-9_-\"'!#$%&/()¬=?¡\]]",
                   "errorText": "Campo obligatorio"}
@@ -366,7 +367,7 @@ function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, pro
 /*
 *Respuesa para generar formulario para modificación de cuenta 4
 */
-function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, user) {
+function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, user, labelEmail = "Email") {
   return {
     "outputContexts": [
       {
@@ -404,8 +405,7 @@ function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, pro
               {
                 "type": "text",
                 "data": {
-                  "label": "Email",
-                  "placeholder": "Ingrese su email",
+                  "label": labelEmail,
                   "validation": {
                   "regex": "^(([^<>()\\[\\]\\.;:\\s@\"]+(\\.[^<>()[\\]\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$",
                   "errorText": "Verifique su correo"
@@ -463,6 +463,237 @@ function suggestionChipsResponse(text, context, sessionId, lifespanCount = 1, pr
   ],
 }
 }
+
+
+
+
+/*
+*Respuesa para generar formulario para creación de nueva cuenta 1
+* NOMBRE APELLIDO RUT
+*/
+function formResponseNewAccount(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx") {
+  return {
+    "outputContexts": [
+      {
+        "name": `projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
+        "lifespanCount": lifespanCount
+      }],
+    "fulfillmentMessages": [
+      {
+        "payload": {
+          "platform": "kommunicate",
+          "message": text,
+          "metadata": {
+            "payload": [
+              {
+                "type": "text",
+                "data": {
+                  "label": "Nombre",
+                  "name": "nombre",                 
+                  "validation": { "regex": "[A-Za-z0-9]",
+                  "errorText": "Verifique nombre."}
+                }
+              },
+              {
+                "type": "text",
+                "data": {
+                  "label": "Apellido",
+                  "name": "apellido",                  
+                  "validation": { "regex": "[A-Za-z0-9]",
+                  "errorText": "Verifique apellido."}
+                }
+              },
+              {
+                "type": "text",
+                "data": {
+                  "label": "Rut Usuario Nuevo",
+                  "name": "rutUsuarioNuevo",                  
+                  "validation": { "regex": "^[0-9-]*$",
+                  "errorText": "Ingrese Rut sin puntos con guión. (Ejemplo: 12345678-9)"}
+                }
+              },              
+              {
+                "data": {
+                  "action": {
+                    "type": "submit",
+                    "label": "Enviar",
+                    "formAction": "https://abastible-chatbot.herokuapp.com/postData",
+                    "requestType": "postBackToBotPlatform"
+                  },
+                  "name": "Enviar",
+                  "type": "submit"
+                },
+                "type": "submit"
+              }
+            ],
+            "contentType": "300",
+            "templateId": "12"
+          }
+        }
+      }
+    ],
+
+  }
+}
+
+/*
+*Respuesa para generar formulario para creación de nueva cuenta 2
+* RUT
+*/
+function formResponseNewAccountHidden(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido) {
+  return {
+    "outputContexts": [
+      {
+        "name": `projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
+        "lifespanCount": lifespanCount
+      }],
+    "fulfillmentMessages": [
+      {
+        "payload": {
+          "platform": "kommunicate",
+          "message": text,
+          "metadata": {
+            "payload": [
+              {
+                "type": "hidden",
+                "data": {
+                  "name": "Nombre",
+                  "value": nombre
+                }
+              },
+              {
+                "type": "hidden",
+                "data": {
+                  "name": "Apellido",
+                  "value": apellido
+                }
+              },             
+              {
+                "type": "text",
+                "data": {
+                  "label": "Rut Usuario Nuevo",
+                  "name": "rutUsuarioNuevo",                  
+                  "validation": { "regex": "^[0-9-]*$",
+                  "errorText": "Ingrese Rut sin puntos con guión. (Ejemplo: 12345678-9)"}
+                }
+              },              
+              {
+                "data": {
+                  "action": {
+                    "type": "submit",
+                    "label": "Enviar",
+                    "formAction": "https://abastible-chatbot.herokuapp.com/postData",
+                    "requestType": "postBackToBotPlatform"
+                  },
+                  "name": "Enviar",
+                  "type": "submit"
+                },
+                "type": "submit"
+              }
+            ],
+            "contentType": "300",
+            "templateId": "12"
+          }
+        }
+      }
+    ],
+
+  }
+}
+
+/*
+*Respuesa para generar formulario para creación de nueva cuenta 1
+* EMAIL NUEVO USUARIO
+*/
+function formResponseNewAccount2(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx") {
+  return {
+    "outputContexts": [
+      {
+        "name": `projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
+        "lifespanCount": lifespanCount
+      }],
+    "fulfillmentMessages": [
+      {
+        "payload": {
+          "platform": "kommunicate",
+          "message": text,
+          "metadata": {
+            "payload": [
+             
+              {
+                "type": "text",
+                "data": {
+                  "label": "Usuario SAP",
+                  "name": "usuarioSAP",                  
+                  "validation": { "regex": "[A-Za-z0-9_-\"'!#$%&/()¬=?¡\]]",
+                  "errorText": "Campo obligatorio"
+                }
+                }
+              },
+              {
+                "type": "text",
+                "data": {
+                  "label": "Correo Usuario Nuevo",
+                  "placeholder": "Ingrese su email",
+                  "validation": {
+                  "regex": "^(([^<>()\\[\\]\\.;:\\s@\"]+(\\.[^<>()[\\]\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$",
+                  "errorText": "Verifique correo"
+                }
+                }
+              },              
+              {
+                "data": {
+                  "action": {
+                    "type": "submit",
+                    "label": "Enviar",
+                    "formAction": "https://abastible-chatbot.herokuapp.com/postData",
+                    "requestType": "postBackToBotPlatform"
+                  },
+                  "name": "Enviar",
+                  "type": "submit"
+                },
+                "type": "submit"
+              }
+            ],
+            "contentType": "300",
+            "templateId": "12"
+          }
+        }
+      }
+    ],
+
+  }
+}
+
+/*
+*Respuesa para generar opciones autosugeridas para creación de nueva cuenta
+* Se útiliza para validar cargos y áreas
+*/
+function suggestionResponse(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", source = []) {
+
+  return {
+    "outputContexts": [
+      {
+        "name": `projects/${proyectId}/agent/sessions/${sessionId}/contexts/${context}`,
+        "lifespanCount": lifespanCount
+      }],
+    "fulfillmentMessages": [
+      {
+        "payload": 
+          {
+            "message": text,
+            "platform": "kommunicate",
+            "metadata": {
+              "KM_AUTO_SUGGESTION": {
+                "source": source
+              }
+            }
+          }
+        
+      }
+    ]
+  };
+}
   
 
 /*
@@ -491,5 +722,9 @@ module.exports = {
   formResponseHiddenUser,
   oneDatePikerResponse,
   suggestionChipsResponse,
+  formResponseNewAccount,
+  formResponseNewAccountHidden,
+  suggestionResponse,
+  formResponseNewAccount2,
 }
 
