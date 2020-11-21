@@ -92,7 +92,7 @@ server.post("/", async (req, res) => {
         }
 
         if(ACTION === "Action.NuevaCuenta.SegundoForm"){
-            let correoNuevoUsuario = req.body.originalDetectIntentRequest.payload.formData["Correo Usuario Nuevo"];
+            let correoNuevoUsuario = req.body.originalDetectIntentRequest.payload.formData["Correo Nuevo Usuario"];
             let nuevoUsuario = req.body.originalDetectIntentRequest.payload.formData["Usuario SAP"];
 
             console.log("//////////////////////" + correoNuevoUsuario)

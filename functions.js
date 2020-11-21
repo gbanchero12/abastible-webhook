@@ -186,7 +186,6 @@ function formResponse(text, context, sessionId, lifespanCount = 1, proyectId = "
                 "type": "text",
                 "data": {
                   "label": "Email",
-                  "placeholder": "Ingrese su email",
                   "validation": {
                   "regex": "^(([^<>()\\[\\]\\.;:\\s@\"]+(\\.[^<>()[\\]\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$",
                   "errorText": "Verifique su correo"
@@ -262,7 +261,6 @@ function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyect
                 "type": "text",
                 "data": {
                   "label": labelEmail,
-                  "placeholder": "Ingrese su email",
                   "validation": {
                   "regex": "^(([^<>()\\[\\]\\.;:\\s@\"]+(\\.[^<>()[\\]\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$",
                   "errorText": "Verifique su correo"
@@ -296,7 +294,7 @@ function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyect
 /*
 *Respuesa para generar formulario para modificación de cuenta 3
 */
-function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, email, labelUsuario = "Usuario") {
+function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, email, labelUsuario = "Usuario", labelEmail = "Email") {
   return {
     "outputContexts": [
       {
@@ -327,7 +325,7 @@ function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, pro
               {
                 "type": "hidden",
                 "data": {
-                  "name": "Email",
+                  "name": labelEmail,
                   "value": email
                 }
               },
@@ -367,7 +365,7 @@ function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, pro
 /*
 *Respuesa para generar formulario para modificación de cuenta 4
 */
-function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, user, labelEmail = "Email") {
+function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, user,labelUsuario = "Usuario", labelEmail = "Email") {
   return {
     "outputContexts": [
       {
@@ -398,7 +396,7 @@ function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, pro
               {
                 "type": "hidden",
                 "data": {
-                  "name": "Usuario",
+                  "name": labelUsuario,
                   "value": user
                 }
               },
@@ -633,8 +631,7 @@ function formResponseNewAccount2(text, context, sessionId, lifespanCount = 1, pr
               {
                 "type": "text",
                 "data": {
-                  "label": "Correo Usuario Nuevo",
-                  "placeholder": "Ingrese su email",
+                  "label": "Correo Usuario Nuevo",                  
                   "validation": {
                   "regex": "^(([^<>()\\[\\]\\.;:\\s@\"]+(\\.[^<>()[\\]\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$",
                   "errorText": "Verifique correo"
