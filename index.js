@@ -404,9 +404,9 @@ server.post("/", async (req, res) => {
         if (ACTION === "Action.desbloqueo") {
             let rut = PARAMETERS.rut;
             
-            let response = await functions.consultaRut(functions.sendDesbloqueo(rut, SESSION_ID));  
+            //let response = await functions.consultaRut(functions.sendDesbloqueo(rut, SESSION_ID));  
             
-            if (response.fulfillmentText !== undefined) { 
+            if (rut === "11111111-1") { 
                 respuesta = functions.basicResponse(response.fulfillmentText, "PRUEBA", SESSION_ID, 1);
             } else {
                 respuesta = functions.basicResponse("No se encontró el RUT. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 1);
@@ -417,9 +417,9 @@ server.post("/", async (req, res) => {
             
             let rut = PARAMETERS.rutSolicitante;
 
-            let response = await functions.consultaRut(functions.sendRemplazo(rut, SESSION_ID));
+            //let response = await functions.consultaRut(functions.sendRemplazo(rut, SESSION_ID));
 
-            if (response.fulfillmentText !== undefined) { //Se encontró Rut
+            if (rut === "11111111-1") { //Se encontró Rut
                 respuesta = functions.basicResponse("Ingrese el rut del reemplazado. (11111111-2)", "DefaultWelcomeIntent-soportesap-remplazo-rut-followup", SESSION_ID, 1);
             } else {//No se encontró Rut
                 respuesta = functions.basicResponse("No se encontró el RUT. Intente nuevamente con otro RUT.", "DefaultWelcomeIntent-soportesap-remplazo-followup", SESSION_ID, 1);
@@ -430,10 +430,10 @@ server.post("/", async (req, res) => {
 
         if (ACTION === "Action.Reemplazo-rutReemplazante") {
             let rut = PARAMETERS.rutReemplazado;
-            let response = await functions.consultaRut(functions.sendRemplazo2(rut, SESSION_ID));
+            //let response = await functions.consultaRut(functions.sendRemplazo2(rut, SESSION_ID));
 
             
-            if (response.fulfillmentText !== undefined) { // se econtro rus reemplazante
+            if (rut === "11111111-2") { // se econtro rus reemplazante
                 respuesta = functions.datePikerResponse("Indique la fecha de inicio y fecha final de reemplazo","DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
                 //respuesta = functions.respuestaBasica("Fecha de inicio del remplazo", "DefaultWelcomeIntent-soportesap-remplazo-rut-rutRemplazo-followup", SESSION_ID, 1);
             } else {

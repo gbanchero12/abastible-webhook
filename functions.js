@@ -218,7 +218,8 @@ function formResponse(text, context, sessionId, lifespanCount = 1, proyectId = "
 
 
 /*
-*Respuesa para generar formulario para modificación de cuenta 2
+*Respuesa para generar formulario generico
+*NOMBRE APELLIDO EMAIL USUARIO
 */
 function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, labelUsuario = "Usuario", labelEmail = "Email") {
   return {
@@ -292,7 +293,8 @@ function formResponseHidden(text, context, sessionId, lifespanCount = 1, proyect
 }
 
 /*
-*Respuesa para generar formulario para modificación de cuenta 3
+*Respuesa para generar formulario generico
+*NOMBRE APELLIDO EMAIL(oculto) USUARIO
 */
 function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, email, labelUsuario = "Usuario", labelEmail = "Email") {
   return {
@@ -363,7 +365,8 @@ function formResponseHiddenMail(text, context, sessionId, lifespanCount = 1, pro
 }
 
 /*
-*Respuesa para generar formulario para modificación de cuenta 4
+*Respuesa para generar formulario generico
+*NOMBRE APELLIDO EMAIL USUARIO(oculto)
 */
 function formResponseHiddenUser(text, context, sessionId, lifespanCount = 1, proyectId = "cobra-lijklx", nombre, apellido, user, labelUsuario = "Usuario", labelEmail = "Email") {
   return {
