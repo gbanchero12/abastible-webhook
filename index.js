@@ -46,7 +46,7 @@ server.post("/", async (req, res) => {
         }
 
         if (ACTION === "Action.NuevaCuenta.rutSolicitante-fallback") {
-            functions.basicResponse("Ingrese Rut con el siguiente formato XXXXXXXX-X", "DefaultWelcomeIntent-soportesap-nuevacuenta-followup", SESSION_ID, 1);
+            respuesta = functions.basicResponse("Ingrese Rut con el siguiente formato XXXXXXXX-X", "DefaultWelcomeIntent-soportesap-nuevacuenta-followup", SESSION_ID, 1);
         }
 
 
