@@ -45,6 +45,11 @@ server.post("/", async (req, res) => {
             }
         }
 
+        if (ACTION === "Action.NuevaCuenta.rutSolicitante-fallback") {
+            functions.basicResponse("Ingrese Rut con el siguiente formato XXXXXXXX-X", "DefaultWelcomeIntent-soportesap-nuevacuenta-followup", SESSION_ID, 1);
+        }
+
+
         if(ACTION === "Action.NuevaCuenta.PrimerForm"){
             let rutNuevoUsuario = req.body.originalDetectIntentRequest.payload.formData["Rut Usuario Nuevo"];
             let nombre = req.body.originalDetectIntentRequest.payload.formData["Nombre"];
