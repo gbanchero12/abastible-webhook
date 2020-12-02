@@ -412,7 +412,7 @@ server.post("/", async (req, res) => {
             //let response = await functions.consultaRut(functions.sendDesbloqueo(rut, SESSION_ID));  
             
             if (rut === "11111111-1") { 
-                respuesta = functions.basicResponse(response.fulfillmentText, "PRUEBA", SESSION_ID, 1);
+                respuesta = functions.basicResponse("Se encontro", "PRUEBA", SESSION_ID, 1);
             } else {
                 respuesta = functions.basicResponse("No se encontró el RUT. Intente nuevamente con otro RUT. (11111111-1)", "DefaultWelcomeIntent-soportesap-desbloqueo-followup", SESSION_ID, 1);
             }
